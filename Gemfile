@@ -21,9 +21,11 @@ group :doc do
 end
 
 group :development, :test do
+  gem 'minitest-rails'
+  gem 'mocha', require: false
   gem 'capistrano-rails'
   gem 'spinach-rails'
-  gem 'minitest-rails'
+  gem 'object-factory', require: 'object_factory'
   gem 'database_cleaner'
   gem 'poltergeist'
   gem 'action_mailer_cache_delivery'
