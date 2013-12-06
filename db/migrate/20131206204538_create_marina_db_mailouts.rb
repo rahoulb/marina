@@ -1,7 +1,7 @@
 class CreateMarinaDbMailouts < ActiveRecord::Migration
   def change
     create_table :marina_db_mailouts do |t|
-      t.belongs_to :account
+      t.belongs_to :site
       t.belongs_to :sender
       t.string :subject, :from_address
       t.text :contents
@@ -10,6 +10,6 @@ class CreateMarinaDbMailouts < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :marina_db_mailouts, :account_id
+    add_index :marina_db_mailouts, :site_id
   end
 end

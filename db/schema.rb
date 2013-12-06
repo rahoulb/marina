@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 20131206204538) do
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "marina_db_mailouts", force: true do |t|
-    t.integer  "account_id"
+    t.integer  "site_id"
     t.integer  "sender_id"
     t.string   "subject"
     t.string   "from_address"
@@ -41,9 +41,10 @@ ActiveRecord::Schema.define(version: 20131206204538) do
     t.datetime "updated_at"
   end
 
-  add_index "marina_db_mailouts", ["account_id"], name: "index_marina_db_mailouts_on_account_id", using: :btree
+  add_index "marina_db_mailouts", ["site_id"], name: "index_marina_db_mailouts_on_site_id", using: :btree
 
   create_table "marina_db_members", force: true do |t|
+    t.integer  "site_id"
     t.string   "first_name"
     t.string   "last_name"
     t.string   "email"
@@ -52,17 +53,18 @@ ActiveRecord::Schema.define(version: 20131206204538) do
     t.datetime "updated_at"
   end
 
-  add_index "marina_db_members", ["email"], name: "index_marina_db_members_on_email", using: :btree
-  add_index "marina_db_members", ["last_name"], name: "index_marina_db_members_on_last_name", using: :btree
+  add_index "marina_db_members", ["site_id", "email"], name: "index_marina_db_members_on_site_id_and_email", using: :btree
+  add_index "marina_db_members", ["site_id", "last_name"], name: "index_marina_db_members_on_site_id_and_last_name", using: :btree
 
   create_table "marina_db_subscription_plans", force: true do |t|
+    t.integer  "site_id"
     t.string   "type"
     t.string   "name",       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "marina_db_subscription_plans", ["name"], name: "index_marina_db_subscription_plans_on_name", unique: true, using: :btree
+  add_index "marina_db_subscription_plans", ["site_id", "name"], name: "index_marina_db_subscription_plans_on_site_id_and_name", unique: true, using: :btree
 
   create_table "marina_db_subscriptions", force: true do |t|
     t.integer  "plan_id"
