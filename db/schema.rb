@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131202220958) do
+ActiveRecord::Schema.define(version: 20131206155442) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -28,5 +28,37 @@ ActiveRecord::Schema.define(version: 20131202220958) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "marina_db_members", force: true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marina_db_members", ["email"], name: "index_marina_db_members_on_email", using: :btree
+  add_index "marina_db_members", ["last_name"], name: "index_marina_db_members_on_last_name", using: :btree
+
+  create_table "marina_db_subscription_plans", force: true do |t|
+    t.string   "type"
+    t.string   "name",       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marina_db_subscription_plans", ["name"], name: "index_marina_db_subscription_plans_on_name", unique: true, using: :btree
+
+  create_table "marina_db_subscriptions", force: true do |t|
+    t.integer  "plan_id"
+    t.integer  "member_id"
+    t.boolean  "active",     default: false, null: false
+    t.date     "expires_on"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marina_db_subscriptions", ["member_id"], name: "index_marina_db_subscriptions_on_member_id", using: :btree
+  add_index "marina_db_subscriptions", ["plan_id"], name: "index_marina_db_subscriptions_on_plan_id", using: :btree
 
 end

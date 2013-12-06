@@ -1,0 +1,49 @@
+<%= content_for :head do %>
+  <title><%= t :mailouts %></title>
+  <%= javascript_include_tag 'admin/mailouts' %>
+<% end %>
+
+<a href="#" data-bind="click: addMailout"><%= t :new_mailout %></a>
+
+<div class="container">
+  <div class="span6" data-bind="with: mailoutsDb.selected">
+    <h1><%= t :new_mailout %></h1>
+    <form>
+      <fieldset>
+        <div class="form-group">
+          <label for="mailout-subject"><%= t :subject %></label>
+          <input type="text" name="mailout-subject" class="form-control span6" data-bind="value: subject"></input>
+        </div>
+        <div class="form-group">
+          <label for="mailout-contents"><%= t :contents %></label>
+          <textarea name="mailout-contents" class="form-control span6" rows="8" data-bind="value: contents"></textarea>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="checkbox">
+          <label for="send-to-all-members">
+            <input type="checkbox" data-bind="checked: sendToAllMembers" name="send-to-all-members">
+            <%= t :send_to_all_members %>
+          </label>
+        </div>
+        <!-- ko ifnot: sendToAllMembers -->
+        <!-- ko foreach: $root.subscriptionPlansDb.items -->
+        <div class="checkbox">
+          <label data-bind="attr: { for: elementId }">
+            <input type="checkbox" data-bind="checked: checked, attr: { name: elementId }">
+            <span data-bind="text: name"></span>
+          </label>
+        </div>
+        <!-- /ko -->
+        <!-- /ko -->
+      </fieldset>
+      <fieldset>
+        <div class="form-group">
+          <div class="pull-right">
+            <a href="#" data-bind="click: deselect"><%= t :cancel %></a> &nbsp; <button class="btn btn-primary"><%= I18n.t(:send) %></button>
+          </div>
+          <button class="btn"><%= I18n.t(:send_test_to_myself) %></button>
+        </div>
+      </fieldset>
+  </div>
+</div>
