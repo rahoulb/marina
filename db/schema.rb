@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20131206155442) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "email"
+    t.boolean  "receives_mailshots", default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
