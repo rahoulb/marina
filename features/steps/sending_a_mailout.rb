@@ -17,12 +17,13 @@ class Spinach::Features::SendingAMailout < Spinach::FeatureSteps
   end
 
   step 'the mailout should be sent to all members' do
-    members_count = @basic_membership_plan.members.count + @premium_membership_plan.members.count + @vip_membership_plan.members.count
-    ActionMailer::Base.cached_deliveries.count.must_equal members_count
+    @members_count = @basic_membership_plan.members.count + @premium_membership_plan.members.count + @vip_membership_plan.members.count
+    ActionMailer::Base.cached_deliveries.count.must_equal @members_count
   end
 
   step 'the sending of it recorded' do
-    pending 'step not implemented'
+    @mailout = Marina::Db::Mailout.last
+    @mailout.deliveries.count.must_equal @members_count
   end
 
   step 'I send the mailout to some plan members' do
@@ -33,8 +34,8 @@ class Spinach::Features::SendingAMailout < Spinach::FeatureSteps
   end
 
   step 'the mailout should be sent to those plan members' do
-    members_count = @basic_membership_plan.members.count + @premium_membership_plan.members.count
-    ActionMailer::Base.cached_deliveries.count.must_equal members_count
+    @members_count = @basic_membership_plan.members.count + @premium_membership_plan.members.count
+    ActionMailer::Base.cached_deliveries.count.must_equal @members_count
   end
 
   step 'I send the mailout to myself' do
@@ -47,7 +48,8 @@ class Spinach::Features::SendingAMailout < Spinach::FeatureSteps
   end
 
   step 'the sending of it is not recorded' do
-    pending 'step not implemented'
+    @mailout = Marina::Db::Mailout.last
+    @mailout.deliveries.empty?.must_equal true
   end
 
 end

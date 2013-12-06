@@ -12,4 +12,10 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  def current_account
+    @current_account ||= OpenStruct.new.tap do | a |
+      a.subscription_plans = Marina::Db::Subscription::Plan
+    end
+  end
 end

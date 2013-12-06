@@ -10,6 +10,6 @@ class Api::SubscriptionPlansController < ApplicationController
   protected
 
   def plans
-    @plans ||= Marina::Commands::SubscriptionPlans.new user: current_user, store: Marina::Db::Subscription::Plan
+    @plans ||= Marina::Commands::Fetchers::SubscriptionPlans.new user: current_user, data_store: current_account.subscription_plans
   end
 end

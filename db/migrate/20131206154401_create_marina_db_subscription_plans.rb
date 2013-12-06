@@ -1,6 +1,7 @@
 class CreateMarinaDbSubscriptionPlans < ActiveRecord::Migration
   def change
     create_table :marina_db_subscription_plans do |t|
+      t.belongs_to :account
       t.string :type
       t.string :name, length: 128, null: false
 

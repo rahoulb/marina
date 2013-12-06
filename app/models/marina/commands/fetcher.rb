@@ -1,5 +1,5 @@
 require 'ostruct'
-require_relative './unauthorised'
+require_relative './secure'
 
 module Marina
   module Commands
@@ -8,28 +8,20 @@ module Marina
     #
     # @my_fetcher = MyFetcher.new user: @user, data_store: @data_store
     #
-    # The user is expected to respond to #can(permission) - returning true or false
-    # If the fetcher's permission property is set, then the user is asked can(permission) and if false then an Marina::Commands::Unauthorised is raised (likewise if the user is nil)
-    # If the fetcher's permission property is nil, then no tests are made (and the user can be nil)
+    # As this is a descendant of Marina::Commands::Secure, if a permission is passed in, then the user is tested for that permission
     # The data_store is expected to respond to #all, fetching the actual data.  If the data_store responds to a different message, or you would like to vary the results based upon parameters, override #do_fetch
     #
-    class Fetcher < OpenStruct
+    class Fetcher < Secure
 
       def fetch params = nil
-        check_security
-        yield do_fetch(params) if block_given?
+        check_security!
+        yield do_fetch(params)
       end
 
       def do_fetch params = nil
         data_store.all
       end
 
-      protected
-
-      def check_security
-        return if permission.nil?
-        raise Unauthorised.new if user.nil? || !user.can(permission)
-      end
     end
   end
 end
