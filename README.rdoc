@@ -20,6 +20,20 @@ The API is REST-style JSON over HTTP API.  Everything that the front-end app can
 
 The idea here is that commands represent the various tasks within the system; instead of using observers and active-record callbacks, instead everything that needs to happen for a particular action is collected into a single command.  Command objects are tested using MiniTest; as all of a commands dependencies are passed in at run-time, this means that their tests can avoid the database completely - for example, data_stores are passed in to represent active record classes.  
 
+Oh, and I like yields and blocks, so whenever possible, we yield results instead of returning them as a value.
+
+For example: 
+
+    @searcher.fetch do | results |
+      do_something_with results
+    end
+
+instead of
+
+    do_something_with @searcher.fetch
+
+Why?  To my mind it continues the "tell, don't ask" principle in Object-Orientated Programming - if you send an object a message and it returns something to you, you are asking that object a question.  If you send an object a message and it yields to a block you've given it, you're saying "here's my message and then do this".  Tell, don't ask.  (I realise in actuality there's no real difference.  But you need to set out your stall).  
+
 The actual active record classes are pretty standard, but they are all namespaced as DB.  But whenever a piece of functionality requires a test, then an equivalent module is created (without the DB namespace).  For example Marina::Db::Mailout implements Marina::Mailout.  This means that the unit tests for the functionality within a model can be tested with no reference to the underlying database.  
 
 Because of this high reliance on mocks and stubs (using Mocha) and abstracting away the underlying platform, plus the heavy use of Javascript in the UI, it is vitally important that the full-stack tests are kept up to date.  
