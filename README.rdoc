@@ -1,28 +1,19 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is Marina - the open source version of Together.
 
-Things you may want to cover:
+It is a system for managing groups, clubs and organisations - offering mailing lists, discussion forums and online publishing.  
 
-* Ruby version
+It is built on Ruby 1.9/2.0, using Rails and MySQL.  
 
-* System dependencies
+To run in production it requires ImageMagick.
 
-* Configuration
+It uses a database.yml as is traditional for Rails apps, but also has an application.yml file that stores various other bits of configuration. 
 
-* Database creation
+To run the full stack tests it requires PhantomJS.  
 
-* Database initialization
+== LICENCE
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+This application is copyright (c) 2013 onwards 3hv Limited and is made available under the terms of the GPLv3.  See the LICENCE file for more details.  
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
