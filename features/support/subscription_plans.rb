@@ -5,8 +5,8 @@ module SubscriptionPlans
 
     step 'there are several subscription plans configured' do
       @basic_membership_plan = a_saved Marina::Db::Subscription::BasicPlan, name: 'Basic'
-      @premium_membership_plan = a_saved Marina::Db::Subscription::PaidPlan, name: 'Premium'
-      @vip_membership_plan = a_saved Marina::Db::Subscription::ReviewedPlan, name: 'VIP'
+      @premium_membership_plan = a_saved Marina::Db::Subscription::PaidPlan, name: 'Premium', price: 25.0, length: 1
+      @vip_membership_plan = a_saved Marina::Db::Subscription::ReviewedPlan, name: 'VIP', price: 35.0, length: 1, supporting_information_label: 'Support your application', supporting_information_description: 'Prove it'
     end
 
     step 'there are members in each subscription plan' do

@@ -1,6 +1,6 @@
 Feature: sending a mailout
 
-  As a member of staff of the organisation
+  As a member of staff on a site
   I would like to send a mailout to various group members
   So that they can be kept up to date with the latest developments
 

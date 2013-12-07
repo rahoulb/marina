@@ -1,0 +1,70 @@
+<%= content_for :head do %>
+  <title><%= t :subscription_plans %></title>
+  <%= javascript_include_tag 'admin/subscription_plans' %>
+<% end %>
+
+<div class="container">
+  <div class="col-md-6" data-bind="with: subscriptionPlansDb.selected">
+    <form class="subscription-plan">
+      <fieldset>
+        <div class="form-group">
+          <label for="plan-name"><%= t :name %></label>
+          <input type="text" name="plan-name" data-bind="value: name" class="form-control" required></input>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="form-group" data-bind="ifnot: basicPlan">
+          <label for="plan-price"><%= t :price %></label>
+          <input type="number" name="plan-price" data-bind="value: price" class="form-control" required></input>
+        </div>
+        <div class="form-group" data-bind="ifnot: basicPlan">
+          <label for="plan-length"><%= t :length %></label>
+          <select name="plan-length" data-bind="value: length" class="form-control" required>
+            <option value="12"><%= t :annual %></option>
+            <option value="1"><%= t :monthly %></option>
+          </select>
+        </div>
+        <div class="form-group" data-bind="if: reviewedPlan">
+          <label for="plan-supporting-label"><%= t :supporting_information_label %></label>
+          <input type="text" name="plan-supporting-label" data-bind="value: supportingInformationLabel" class="form-control"></input>
+        </div>
+        <div class="form-group" data-bind="if: reviewedPlan">
+          <label for="plan-supporting-description"><%= t :supporting_information_description %></label>
+          <textarea name="plan-supporting-description" data-bind="value: supportingInformationDescription" class="form-control"></textarea>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="checkbox">
+          <label for="plan-active">
+            <%= t :active %>
+            <input type="checkbox" name="plan-active" data-bind="checked: active"></input>
+          </label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="pull-right">
+          <a href="#" data-bind="click: deselect"><%= t :cancel %></a> &nbsp; <button class="btn btn-primary" data-bind="click: save"><%= t :save %></button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="col-md-6">
+    <ul class="list-group">
+      <li class="list-group-item">
+      <a href="#" data-bind="click: newBasicPlan"><%= t :new_basic_plan %></a>
+      </li>
+      <li class="list-group-item">
+      <a href="#" data-bind="click: newPaidPlan"><%= t :new_paid_plan %></a>
+      </li>
+      <li class="list-group-item">
+      <a href="#" data-bind="click: newReviewedPlan"><%= t :new_reviewed_plan %></a>
+      </li>
+      <!-- ko foreach: subscriptionPlansDb.items -->
+      <li class="list-group-item" data-bind="attr: { id: elementId() }">
+      <span class="badge" data-bind="text: numberOfMembers"></span>
+      <a href="#" data-bind="click: edit, text: name"></a>
+      </li>
+      <!-- /ko -->
+    </ul>
+  </div>
+</div>

@@ -70,7 +70,12 @@ ActiveRecord::Schema.define(version: 20131207162526) do
   create_table "marina_db_subscription_plans", force: true do |t|
     t.integer  "site_id"
     t.string   "type"
-    t.string   "name",       null: false
+    t.string   "name",                                                                       null: false
+    t.decimal  "price",                              precision: 10, scale: 2
+    t.integer  "length"
+    t.string   "supporting_information_label"
+    t.text     "supporting_information_description"
+    t.boolean  "active",                                                      default: true, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

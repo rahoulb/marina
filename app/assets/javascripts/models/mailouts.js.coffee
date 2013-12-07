@@ -8,6 +8,9 @@ class MailoutsDb extends Db
   itemDataFrom: (data)->
     data.mailouts
 
+  urlFor: (mailout)->
+    "/api/mailouts/#{mailout.id}.json"
+
   toJS: (mailout)->
     mailout:
       subject: mailout.subject()

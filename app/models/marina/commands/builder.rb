@@ -14,8 +14,19 @@ module Marina
         yield do_create(params)
       end
 
+      def update id, params = nil
+        check_security!
+        item = do_find id
+        item.update_attributes! params
+        yield item
+      end
+
       def do_create params = nil
         data_store.create! params
+      end
+
+      def do_find id
+        data_store.find id
       end
 
     end
