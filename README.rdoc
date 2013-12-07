@@ -1,6 +1,6 @@
 == README
 
-This is Marina - the open source version of Together.
+This is Marina - the open source platform underlying my commercial project, Together.
 
 It is a system for managing groups, clubs and organisations - offering mailing lists, discussion forums and online publishing.  
 
@@ -11,6 +11,18 @@ To run in production it requires ImageMagick.
 It uses a database.yml as is traditional for Rails apps, but also has an application.yml file that stores various other bits of configuration. 
 
 To run the full stack tests it requires PhantomJS.  
+
+== Design and structure
+
+The User-Interface is a client-side Javascript app, built using KnockoutJS and Kolo.  Kolo gives data-sources (called DBs) and models and KnockoutJS binds them to user-interface components.  To test these are working correctly, there are full-stack tests implemented using Spinach and PhantomJS.  Each model has an associated DB; the model represents the object and the DB its transport (using AJAX) to the API.  The HTML views are pretty much static, and KnockoutJS embellishes them at run-time; each page has a ViewModel that is extended to collect the relevant DBs and models for that particular page.  The UI design itself is built on top of Bootstrap.
+
+The API is REST-style JSON over HTTP API.  Everything that the front-end app can do is fed through this API.  The implementation itself is as Rails controllers that, by themselves, do very little.  Instead, everything follows the Command pattern.  Commands are split into several basic types - Fetchers (that read data), Builders (that write data), Jobs (that perform actions in the background) and so on.  Commands optionally have a "permission" property.  If this is set then the current user (who is passed in as a parameter to the command) is checked to see if they have that permission; if not, the command does not run.  
+
+The idea here is that commands represent the various tasks within the system; instead of using observers and active-record callbacks, instead everything that needs to happen for a particular action is collected into a single command.  Command objects are tested using MiniTest; as all of a commands dependencies are passed in at run-time, this means that their tests can avoid the database completely - for example, data_stores are passed in to represent active record classes.  
+
+The actual active record classes are pretty standard, but they are all namespaced as DB.  But whenever a piece of functionality requires a test, then an equivalent module is created (without the DB namespace).  For example Marina::Db::Mailout implements Marina::Mailout.  This means that the unit tests for the functionality within a model can be tested with no reference to the underlying database.  
+
+Because of this high reliance on mocks and stubs (using Mocha) and abstracting away the underlying platform, plus the heavy use of Javascript in the UI, it is vitally important that the full-stack tests are kept up to date.  
 
 == LICENCE
 
