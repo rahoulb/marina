@@ -29,4 +29,5 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'poltergeist'
   gem 'action_mailer_cache_delivery'
+  gem 'selenium-webdriver'
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131206204538) do
+ActiveRecord::Schema.define(version: 20131207162526) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -29,6 +29,16 @@ ActiveRecord::Schema.define(version: 20131206204538) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
+  create_table "marina_db_mailout_deliveries", force: true do |t|
+    t.integer  "mailout_id"
+    t.integer  "member_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marina_db_mailout_deliveries", ["mailout_id"], name: "index_marina_db_mailout_deliveries_on_mailout_id", using: :btree
+  add_index "marina_db_mailout_deliveries", ["member_id"], name: "index_marina_db_mailout_deliveries_on_member_id", using: :btree
+
   create_table "marina_db_mailouts", force: true do |t|
     t.integer  "site_id"
     t.integer  "sender_id"
@@ -36,6 +46,7 @@ ActiveRecord::Schema.define(version: 20131206204538) do
     t.string   "from_address"
     t.text     "contents"
     t.boolean  "send_to_all_members", default: false
+    t.boolean  "test",                default: false
     t.text     "recipient_plan_ids"
     t.datetime "created_at"
     t.datetime "updated_at"

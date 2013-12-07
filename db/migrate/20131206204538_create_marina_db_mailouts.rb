@@ -5,7 +5,7 @@ class CreateMarinaDbMailouts < ActiveRecord::Migration
       t.belongs_to :sender
       t.string :subject, :from_address
       t.text :contents
-      t.boolean :send_to_all_members, default: false
+      t.boolean :send_to_all_members, :test, default: false
       t.text :recipient_plan_ids
       t.timestamps
     end

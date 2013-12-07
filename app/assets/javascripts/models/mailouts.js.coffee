@@ -1,6 +1,6 @@
 class MailoutsDb extends Db
   constructor: (viewModel, @subscriptionsPlanDb)->
-    super viewModel, 'mailouts', '/api/mailouts.json'
+    super viewModel, 'mailout', '/api/mailouts.json'
 
   newItem: (id)->
     new Mailout(id, this)
@@ -13,8 +13,9 @@ class MailoutsDb extends Db
       subject: mailout.subject()
       from_address: mailout.fromAddress()
       send_to_all_members: mailout.sendToAllMembers()
-      recipients_plan_ids: mailout.recipientPlanIds()
-      do_test_send: mailout.testSend()
+      recipient_plan_ids: mailout.recipientPlanIds()
+      test: mailout.testSend()
+
 
 class Mailout extends Model
   constructor: (id, db)->
@@ -35,6 +36,16 @@ class Mailout extends Model
     for plan in @db.subscriptionsPlanDb.items()
       results.push plan.id if plan.checked()
     return results
+
+  save: ->
+    $('form.mailout').validate()
+    if $('form.mailout').valid()
+      @db.save this, =>
+        @testSend false
+
+  sendTestToMyself: ->
+    @testSend true
+    @save()
 
 window.MailoutsDb = MailoutsDb
 window.Mailout = Mailout

@@ -15,7 +15,7 @@ module Marina
       end
 
       def do_create params = nil
-        data_store.create!
+        data_store.create! params
       end
 
     end

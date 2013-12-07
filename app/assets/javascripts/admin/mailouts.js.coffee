@@ -1,10 +1,11 @@
 class MailoutsViewModel extends ViewModel
   constructor: ->
     super
-    @mailoutsDb = new MailoutsDb this
-    @mailoutsDb.load true
     @subscriptionPlansDb = new SubscriptionPlansDb this
     @subscriptionPlansDb.load true
+
+    @mailoutsDb = new MailoutsDb this, @subscriptionPlansDb
+    @mailoutsDb.load true
 
   addMailout: ->
     @mailoutsDb.newItem(null).edit()

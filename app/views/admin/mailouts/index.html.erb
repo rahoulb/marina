@@ -8,15 +8,15 @@
 <div class="container">
   <div class="span6" data-bind="with: mailoutsDb.selected">
     <h1><%= t :new_mailout %></h1>
-    <form>
+    <form class="mailout">
       <fieldset>
         <div class="form-group">
           <label for="mailout-subject"><%= t :subject %></label>
-          <input type="text" name="mailout-subject" class="form-control span6" data-bind="value: subject"></input>
+          <input type="text" name="mailout-subject" class="form-control span6" data-bind="value: subject" required></input>
         </div>
         <div class="form-group">
           <label for="mailout-contents"><%= t :contents %></label>
-          <textarea name="mailout-contents" class="form-control span6" rows="8" data-bind="value: contents"></textarea>
+          <textarea name="mailout-contents" class="form-control span6" rows="8" data-bind="value: contents" required></textarea>
         </div>
       </fieldset>
       <fieldset>
@@ -40,9 +40,9 @@
       <fieldset>
         <div class="form-group">
           <div class="pull-right">
-            <a href="#" data-bind="click: deselect"><%= t :cancel %></a> &nbsp; <button class="btn btn-primary"><%= I18n.t(:send) %></button>
+            <a href="#" data-bind="click: deselect"><%= t :cancel %></a> &nbsp; <button class="btn btn-primary" data-bind="click: save"><%= I18n.t(:send) %></button>
           </div>
-          <button class="btn"><%= I18n.t(:send_test_to_myself) %></button>
+          <button class="btn" data-bind="click: sendTestToMyself"><%= I18n.t(:send_test_to_myself) %></button>
         </div>
       </fieldset>
   </div>
