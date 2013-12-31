@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  rescue_from Marina::Commands::Unauthorised, with: :unauthorised
+  rescue_from ActiveRecord::RecordInvalid, with: :invalid
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   protected
 
@@ -13,6 +14,27 @@ class ApplicationController < ActionController::Base
     @current_account ||= OpenStruct.new.tap do | a |
       a.subscription_plans = Marina::Db::Subscription::Plan
       a.mailouts = Marina::Db::Mailout
+    end
+  end
+
+  def unauthorised
+    respond_to do | format | 
+      format.html { render file: '401.html', status: 401 }
+      format.json { render json: 'Insufficient security clearance', status: 401 }
+    end
+  end
+
+  def invalid exception
+    respond_to do | format |
+      format.html { render file: '500.html', status: 422 }
+      format.json { render json: exception.message, status: 422 }
+    end
+  end
+
+  def not_found
+    respond_to do | format |
+      format.html { render file: '404.html', status: 404 }
+      format.json { render json: 'Not found', status: 404 }
     end
   end
 end
