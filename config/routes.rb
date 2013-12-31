@@ -7,6 +7,7 @@ Marina::Application.routes.draw do
   end
 
   namespace :api do
+    resources :sessions, only: [:new]
     resources :mailouts
     resources :subscription_plans
   end
