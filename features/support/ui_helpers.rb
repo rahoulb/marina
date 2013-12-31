@@ -4,14 +4,18 @@ module UiHelpers
     page.execute_script("$('#{element_id}').trigger('blur');")
   end
 
-  def wait_for name, value
+  def wait_until &block
     count = 0
-    selector = "body[data-#{name}=#{value}]"
     while count < 10
-      return if page.has_css? selector
-      sleep(0.1)
+      return if block.call
+      sleep 0.1
       count += 1
     end
-    raise "Time out waiting for #{selector}"
+    raise "Time out"
+  end
+
+  def wait_for name, value
+    selector = "body[data-#{name}=#{value}]"
+    wait_until { page.has_css? selector }
   end
 end
