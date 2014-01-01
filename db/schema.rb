@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131207162526) do
+ActiveRecord::Schema.define(version: 20131210212725) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -28,6 +28,18 @@ ActiveRecord::Schema.define(version: 20131207162526) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "marina_db_asset_pages", force: true do |t|
+    t.integer  "site_id"
+    t.string   "type"
+    t.string   "name"
+    t.text     "contents"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marina_db_asset_pages", ["site_id", "name"], name: "index_marina_db_asset_pages_on_site_id_and_name", unique: true, using: :btree
 
   create_table "marina_db_mailout_deliveries", force: true do |t|
     t.integer  "mailout_id"
@@ -56,9 +68,11 @@ ActiveRecord::Schema.define(version: 20131207162526) do
 
   create_table "marina_db_members", force: true do |t|
     t.integer  "site_id"
+    t.string   "username"
     t.string   "first_name"
     t.string   "last_name"
     t.string   "email"
+    t.string   "encrypted_password"
     t.boolean  "receives_mailshots", default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -66,6 +80,7 @@ ActiveRecord::Schema.define(version: 20131207162526) do
 
   add_index "marina_db_members", ["site_id", "email"], name: "index_marina_db_members_on_site_id_and_email", using: :btree
   add_index "marina_db_members", ["site_id", "last_name"], name: "index_marina_db_members_on_site_id_and_last_name", using: :btree
+  add_index "marina_db_members", ["site_id", "username"], name: "index_marina_db_members_on_site_id_and_username", using: :btree
 
   create_table "marina_db_subscription_plans", force: true do |t|
     t.integer  "site_id"

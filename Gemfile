@@ -15,6 +15,7 @@ gem 'rujitsu'
 gem 'foreman'
 gem 'unicorn'
 gem 'delayed_job_active_record'
+gem 'acts_as_list'
 
 group :doc do
   gem 'sdoc', require: false
