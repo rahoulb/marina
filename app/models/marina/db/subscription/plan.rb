@@ -6,4 +6,8 @@ class Marina::Db::Subscription::Plan < ActiveRecord::Base
   has_many :members, through: :active_subscribers
 
   scope :in_order, -> { order(:name) }
+
+  def to_param
+    "#{id}-#{name.parameterize}"
+  end
 end

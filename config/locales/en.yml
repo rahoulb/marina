@@ -18,4 +18,14 @@ en:
   save: 'Save'
   active: 'Active'
   site_assets: 'Site assets'
+  join: 'Join'
+  first_name: 'First name'
+  last_name: 'Last name'
+  email: 'Email address'
+  username: 'User name'
+  password: 'Password'
+  password_confirmation: 'Password confirmation'
+  agrees_to_terms: 'Agree to terms and conditions'
+  join_mailing_list: 'Join the mailing list'
+
 

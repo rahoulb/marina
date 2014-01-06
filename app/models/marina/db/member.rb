@@ -1,7 +1,7 @@
 class Marina::Db::Member < ActiveRecord::Base
   include Marina::Member
 
-  attr_accessor :password, :password_confirmation
+  attr_accessor :password, :password_confirmation, :agrees_to_terms
 
   validates :last_name, presence: true
   validates :email, presence: true

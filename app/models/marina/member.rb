@@ -30,5 +30,10 @@ module Marina
       return current_subscription.nil? ? '' : current_subscription.name
     end
 
+    def subscribe_to plan, params = {} 
+      current_subscription.update_attributes! active: false, expires_on: Date.today unless current_subscription.nil?
+      subscriptions.create! plan: plan, active: true, expires_on: params[:expires_on]
+    end
+
   end
 end

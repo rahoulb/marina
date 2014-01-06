@@ -12,4 +12,5 @@ end
 
 Spinach.config.save_and_open_page_on_failure = false
 
-::Capybara.default_driver = :poltergeist
+#::Capybara.default_driver = :poltergeist
+::Capybara.default_driver = :selenium

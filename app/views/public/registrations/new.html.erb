@@ -1,0 +1,55 @@
+<%= content_for :head do %>
+  <title><%= t :registration %></title>
+  <%= javascript_include_tag 'public/registrations' %>
+<% end %>
+
+<div class="container">
+  <div class="col-md-6">
+    <form class="registration">
+      <fieldset>
+        <div class="form-group">
+          <label for="first-name"><%= t :first_name %></label>
+          <input type="text" name="first-name" required></input>
+        </div>
+        <div class="form-group">
+          <label for="last-name"><%= t :last_name %></label>
+          <input type="text" name="last-name" required></input>
+        </div>
+        <div class="form-group">
+          <label for="username"><%= t :username %></label>
+          <input type="text" name="username" required></input>
+        </div>
+        <div class="form-group">
+          <label for="email"><%= t :email %></label>
+          <input type="email" name="email" required></input>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="form-group">
+          <label for="password"><%= t :password %></label>
+          <input type="password" name="password" required></input>
+        </div>
+        <div class="form-group">
+          <label for="password_confirmation"><%= t :password_confirmation %></label>
+          <input type="password" name="password_confirmation" required></input>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="agrees-to-terms" required></input>
+            <%= t :agrees_to_terms %>
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="join-mailing-list"></input>
+            <%= t :join_mailing_list %>
+          </label>
+        </div>
+      </fieldset>
+      <button class="btn btn-primary"><%= t :join %></button>
+    </form>
+  </div>
+</div>
+
+<div id="page-info" data-subscription-plan-id="<%= subscription_plan.id %>">
+</div>

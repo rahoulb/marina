@@ -30,6 +30,36 @@ describe Marina::Member do
         subject.subscription_plan.must_equal ''
       end
     end
+
+    describe "attaching to a plan" do
+      before do
+        subject.subscriptions = subscriptions
+        subscriptions.expects(:create!).with(plan: plan, active: true, expires_on: expiry_date).returns(new_subscription)
+      end
+
+      describe "when not on an active plan" do
+        before { subject.stubs(:current_subscription).returns(nil) }
+
+        it "creates an active subscription to the plan" do
+          subject.subscribe_to plan, expires_on: expiry_date
+        end
+      end
+
+      describe "when already on an active plan" do
+        before { subject.stubs(:current_subscription).returns(subscription) }
+
+        it "cancels the existing plan" do
+          subscription.expects(:update_attributes!).with(active: false, expires_on: Date.today)
+
+          subject.subscribe_to plan, expires_on: expiry_date
+        end
+      end
+
+      let(:plan) { mock 'Plan' }
+      let(:subscriptions) { mock 'Array of Subscriptions' }
+      let(:expiry_date) { Date.today + 365 }
+      let(:new_subscription) { stub name: 'Another Membership Plan' }
+    end
   end
 
   describe "passwords" do
@@ -74,7 +104,7 @@ describe Marina::Member do
   end
 
   let(:member_class) do 
-    Class.new(Struct.new(:first_name, :last_name, :password, :password_confirmation, :encrypted_password)) do
+    Class.new(Struct.new(:first_name, :last_name, :password, :password_confirmation, :encrypted_password, :subscriptions)) do
       include Marina::Member
 
       class << self
