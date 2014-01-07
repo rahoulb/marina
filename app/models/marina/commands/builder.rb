@@ -18,7 +18,7 @@ module Marina
         check_security!
         item = do_find id
         item.update_attributes! params
-        yield item
+        yield item if block_given?
       end
 
       def do_create params = nil

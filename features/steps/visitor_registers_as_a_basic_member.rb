@@ -1,8 +1,4 @@
 class Spinach::Features::VisitorRegistersAsABasicMember < Spinach::FeatureSteps
-  step 'a basic plan is configured' do
-    @plan = a_saved Marina::Db::Subscription::BasicPlan, name: 'Basic'
-  end
-
   step 'I visit the registration page' do
     visit "/public/subscription_plans/#{@plan.to_param}/registrations/new"
   end

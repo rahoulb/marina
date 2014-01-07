@@ -29,6 +29,13 @@ describe Marina::Member do
       it "does not report the plan name" do
         subject.subscription_plan.must_equal ''
       end
+
+      it "can build a replacement subscription" do
+        subject.subscriptions = subscriptions
+        subscriptions.expects(:build).returns(:new_subscription)
+
+        subject.build_subscription
+      end
     end
 
     describe "attaching to a plan" do
@@ -56,10 +63,11 @@ describe Marina::Member do
       end
 
       let(:plan) { mock 'Plan' }
-      let(:subscriptions) { mock 'Array of Subscriptions' }
       let(:expiry_date) { Date.today + 365 }
-      let(:new_subscription) { stub name: 'Another Membership Plan' }
     end
+
+    let(:subscriptions) { mock 'Array of Subscriptions' }
+    let(:new_subscription) { stub name: 'Another Membership Plan' }
   end
 
   describe "passwords" do

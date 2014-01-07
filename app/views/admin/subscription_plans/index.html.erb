@@ -13,11 +13,11 @@
         </div>
       </fieldset>
       <fieldset>
-        <div class="form-group" data-bind="ifnot: basicPlan">
+        <div class="form-group">
           <label for="plan-price"><%= t :price %></label>
           <input type="number" name="plan-price" data-bind="value: price" class="form-control" required></input>
         </div>
-        <div class="form-group" data-bind="ifnot: basicPlan">
+        <div class="form-group">
           <label for="plan-length"><%= t :length %></label>
           <select name="plan-length" data-bind="value: length" class="form-control" required>
             <option value="12"><%= t :annual %></option>
@@ -50,9 +50,6 @@
   </div>
   <div class="col-md-6">
     <ul class="list-group">
-      <li class="list-group-item">
-      <a href="#" data-bind="click: newBasicPlan"><%= t :new_basic_plan %></a>
-      </li>
       <li class="list-group-item">
       <a href="#" data-bind="click: newPaidPlan"><%= t :new_paid_plan %></a>
       </li>

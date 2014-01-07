@@ -7,7 +7,18 @@ class Marina::Db::Subscription::Plan < ActiveRecord::Base
 
   scope :in_order, -> { order(:name) }
 
+  serialize :feature_levels, Array
+
   def to_param
     "#{id}-#{name.parameterize}"
+  end
+
+  class << self
+    def by_feature_level feature_level
+      find_each do | plan |
+        return plan if plan.feature_levels.include? feature_level
+      end
+      return nil
+    end
   end
 end

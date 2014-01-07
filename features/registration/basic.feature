@@ -4,9 +4,6 @@ Feature: visitor registers as a basic member
   I would like to register as a basic member
   So that I can join the community
 
-  Background: 
-    Given a basic plan is configured
-
   Scenario: basic registration
 
     When I visit the registration page

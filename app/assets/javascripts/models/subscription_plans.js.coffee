@@ -32,8 +32,6 @@ class SubscriptionPlan extends Model
     @supportingInformationDescription = ko.observable ''
     @active = ko.observable true
 
-    @basicPlan = ko.computed =>
-      @type() == 'Marina::Db::Subscription::BasicPlan'
     @paidPlan = ko.computed =>
       @type() == 'Marina::Db::Subscription::PaidPlan'
     @reviewedPlan = ko.computed =>

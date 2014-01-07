@@ -4,11 +4,6 @@ class SubscriptionPlansViewModel extends ViewModel
     @subscriptionPlansDb = new SubscriptionPlansDb this
     @subscriptionPlansDb.load true
 
-  newBasicPlan: ->
-    plan = @subscriptionPlansDb.newItem null
-    plan.type 'Marina::Db::Subscription::BasicPlan'
-    plan.edit()
-
   newPaidPlan: ->
     plan = @subscriptionPlansDb.newItem null
     plan.type 'Marina::Db::Subscription::PaidPlan'

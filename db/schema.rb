@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131210212725) do
+ActiveRecord::Schema.define(version: 20140107190823) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -40,6 +40,18 @@ ActiveRecord::Schema.define(version: 20131210212725) do
   end
 
   add_index "marina_db_asset_pages", ["site_id", "name"], name: "index_marina_db_asset_pages_on_site_id_and_name", unique: true, using: :btree
+
+  create_table "marina_db_log_entries", force: true do |t|
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.string   "type"
+    t.text     "data"
+    t.text     "message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marina_db_log_entries", ["owner_type", "owner_id", "created_at"], name: "log_entry_owner", using: :btree
 
   create_table "marina_db_mailout_deliveries", force: true do |t|
     t.integer  "mailout_id"
@@ -90,6 +102,7 @@ ActiveRecord::Schema.define(version: 20131210212725) do
     t.integer  "length"
     t.string   "supporting_information_label"
     t.text     "supporting_information_description"
+    t.text     "feature_levels"
     t.boolean  "active",                                                      default: true, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -100,8 +113,11 @@ ActiveRecord::Schema.define(version: 20131210212725) do
   create_table "marina_db_subscriptions", force: true do |t|
     t.integer  "plan_id"
     t.integer  "member_id"
-    t.boolean  "active",     default: false, null: false
+    t.boolean  "active",                default: false, null: false
     t.date     "expires_on"
+    t.boolean  "lifetime_subscription", default: false, null: false
+    t.float    "credit",                default: 0.0,   null: false
+    t.string   "identifier",            default: ""
     t.datetime "created_at"
     t.datetime "updated_at"
   end

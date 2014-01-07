@@ -18,20 +18,6 @@ class Spinach::Features::ManagingSubscriptionPlans < Spinach::FeatureSteps
     end
   end
 
-  step 'I add a basic plan' do
-    click_link I18n.t(:new_basic_plan)
-    fill_in 'plan-name', with: 'My basic plan'
-    click_button I18n.t(:save)
-    wait_for 'subscription-plan', 'saved'
-  end
-
-  step 'the new basic plan should be added to the system' do
-    page.has_content?('My basic plan').must_equal true
-    plan = Marina::Db::Subscription::BasicPlan.where(name: 'My basic plan').first
-    plan.wont_equal nil
-    plan.name.must_equal 'My basic plan'
-  end
-
   step 'I add a paid plan, including payment details and subscription length' do
     click_link I18n.t(:new_paid_plan)
     fill_in 'plan-name', with: 'My paid plan'

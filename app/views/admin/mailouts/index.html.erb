@@ -27,6 +27,12 @@
           </label>
         </div>
         <!-- ko ifnot: sendToAllMembers -->
+        <div class="checkbox">
+          <label for="basic-members">
+            <input type="checkbox" data-bind="checked: sendToBasicMembers" name="send-to-basic-members">
+            <%= t :send_to_basic_members %>
+          </label>
+        </div>
         <!-- ko foreach: $root.subscriptionPlansDb.items -->
         <div class="checkbox">
           <label data-bind="attr: { for: elementId }">

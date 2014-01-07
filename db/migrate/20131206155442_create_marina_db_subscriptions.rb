@@ -4,7 +4,10 @@ class CreateMarinaDbSubscriptions < ActiveRecord::Migration
       t.belongs_to :plan
       t.belongs_to :member
       t.boolean :active, default: false, null: false
-      t.date :expires_on
+      t.date :expires_on, default: nil
+      t.boolean :lifetime_subscription, default: false, null: false
+      t.float :credit, default: 0.0, null: false
+      t.string :identifier, length: 64, default: ''
       t.timestamps
     end
 

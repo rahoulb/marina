@@ -14,13 +14,6 @@ Feature: managing subscription plans
     When I visit the dashboard and look at subscription plans
     Then I should see each of the plans, along with their type and the number of members
 
-  Scenario: adding a basic plan
-
-    Given I am logged in as an administrator
-    When I visit the dashboard and look at subscription plans
-    And I add a basic plan 
-    Then the new basic plan should be added to the system
-
   Scenario: adding a paid plan
 
     Given I am logged in as an administrator

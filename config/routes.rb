@@ -5,7 +5,6 @@ Marina::Application.routes.draw do
     resources :subscription_plans, only: [] do
       resources :registrations
     end
-
   end
 
   namespace :admin do
@@ -19,5 +18,6 @@ Marina::Application.routes.draw do
     resources :mailouts
     resources :subscription_plans
     resources :members
+    resources :pin_payment_notifications, only: [:create]
   end
 end

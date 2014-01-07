@@ -8,6 +8,7 @@ class CreateMarinaDbSubscriptionPlans < ActiveRecord::Migration
       t.integer :length
       t.string :supporting_information_label
       t.text :supporting_information_description
+      t.text :feature_levels
       t.boolean :active, default: true, null: false
       t.timestamps
     end

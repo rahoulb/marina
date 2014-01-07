@@ -27,6 +27,7 @@ class Mailout extends Model
     @contents = ko.observable ''
     @fromAddress = ko.observable ''
     @sendToAllMembers = ko.observable false
+    @sendToBasicMembers = ko.observable false
     @testSend = ko.observable false
 
   updateAttributes: (data)->

@@ -20,7 +20,7 @@ class Spinach::Features::SendingAMailout < Spinach::FeatureSteps
   end
 
   step 'the mailout should be sent to all members' do
-    @members_count = @basic_membership_plan.members.count + @premium_membership_plan.members.count + @vip_membership_plan.members.count
+    @members_count = Marina::Db::Member.mailshot_receivers.count
     ActionMailer::Base.cached_deliveries.count.must_equal @members_count
   end
 
@@ -39,7 +39,7 @@ class Spinach::Features::SendingAMailout < Spinach::FeatureSteps
   end
 
   step 'the mailout should be sent to those plan members' do
-    @members_count = @basic_membership_plan.members.count + @premium_membership_plan.members.count
+    @members_count = Marina::Db::Member.mailshot_receivers.count - @premium_plan.members.count
     ActionMailer::Base.cached_deliveries.count.must_equal @members_count
   end
 

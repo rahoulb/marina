@@ -6,6 +6,7 @@ module Marina
     # first_name, last_name
     # password, password_confirmation and encrypted_password
     # current_subscription (which returns nil or a subscription that answers to #active and #name)
+    # subscriptions (which answers to #build)
     # the implementing class should answer #encryption_strategy with a class that answers to #encrypt(password)
 
     def name
@@ -28,6 +29,10 @@ module Marina
 
     def subscription_plan
       return current_subscription.nil? ? '' : current_subscription.name
+    end
+
+    def build_subscription
+      subscriptions.build
     end
 
     def subscribe_to plan, params = {} 
