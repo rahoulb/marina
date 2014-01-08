@@ -1,4 +1,5 @@
 require 'active_support/core_ext/object/blank'
+require 'rujitsu'
 
 module Marina
   module Member
@@ -38,6 +39,10 @@ module Marina
     def subscribe_to plan, params = {} 
       current_subscription.update_attributes! active: false, expires_on: Date.today unless current_subscription.nil?
       subscriptions.create! plan: plan, active: true, expires_on: params[:expires_on]
+    end
+
+    def generate_api_token
+      self.api_token = 48.random_letters
     end
 
   end

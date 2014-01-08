@@ -111,8 +111,16 @@ describe Marina::Member do
     end
   end
 
+  describe "API token" do
+    it "is generated" do
+      subject.generate_api_token
+      subject.api_token.wont_equal nil
+      (subject.api_token.length > 32).must_equal true
+    end
+  end
+
   let(:member_class) do 
-    Class.new(Struct.new(:first_name, :last_name, :password, :password_confirmation, :encrypted_password, :subscriptions)) do
+    Class.new(Struct.new(:first_name, :last_name, :password, :password_confirmation, :encrypted_password, :subscriptions, :api_token)) do
       include Marina::Member
 
       class << self

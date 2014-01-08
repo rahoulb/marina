@@ -5,8 +5,9 @@ require "minitest/rails"
 require "minitest/pride"
 require_relative '../features/support/blueprints'
 
-
 class ActiveSupport::TestCase
 
-  # Add more helper methods to be used by all tests here...
+  def login_as member
+    post "/api/sessions", username: member.username, password: member.password, format: 'json'
+  end
 end

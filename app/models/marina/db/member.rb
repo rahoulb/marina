@@ -14,6 +14,7 @@ class Marina::Db::Member < ActiveRecord::Base
   scope :mailshot_receivers, -> { where(receives_mailshots: true) }
 
   before_save :encrypt_password
+  before_create :generate_api_token
 
   def can do_something
     true

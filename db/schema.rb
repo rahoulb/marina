@@ -85,7 +85,9 @@ ActiveRecord::Schema.define(version: 20140107190823) do
     t.string   "last_name"
     t.string   "email"
     t.string   "encrypted_password"
+    t.string   "api_token"
     t.boolean  "receives_mailshots", default: false, null: false
+    t.boolean  "admin",              default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
