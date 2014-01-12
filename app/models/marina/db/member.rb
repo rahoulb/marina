@@ -17,6 +17,7 @@ class Marina::Db::Member < ActiveRecord::Base
   before_create :generate_api_token
 
   serialize :permissions, Array
+  serialize :data, Hash
 
   def current_subscription
     subscriptions.active.first

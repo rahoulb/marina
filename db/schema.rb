@@ -100,6 +100,7 @@ ActiveRecord::Schema.define(version: 20140108181130) do
     t.string   "api_token"
     t.boolean  "receives_mailshots", default: false, null: false
     t.text     "permissions"
+    t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

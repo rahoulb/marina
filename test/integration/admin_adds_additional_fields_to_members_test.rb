@@ -19,6 +19,13 @@ describe "AdminAddsAdditionalFieldsToMembers Integration Test" do
       @field_definition.kind_of?(Marina::Db::FieldDefinition::ShortText).must_equal true
 
       compare @field_definition, with: data
+
+      @member = a_saved Marina::Db::Member
+      @member.data['test'].must_equal nil
+      @member.data['test'] = 'Hello'
+      @member.save
+      @member.reload
+      @member.data['test'].must_equal 'Hello'
     end
 
     it "adds a long text field" do
@@ -33,6 +40,13 @@ describe "AdminAddsAdditionalFieldsToMembers Integration Test" do
       @field_definition.kind_of?(Marina::Db::FieldDefinition::LongText).must_equal true
 
       compare @field_definition, with: data
+
+      @member = a_saved Marina::Db::Member
+      @member.data['test'].must_equal nil
+      @member.data['test'] = 'Hello'
+      @member.save
+      @member.reload
+      @member.data['test'].must_equal 'Hello'
     end
 
     it "adds a drop-down field with options" do
@@ -48,6 +62,13 @@ describe "AdminAddsAdditionalFieldsToMembers Integration Test" do
       @field_definition.options.must_equal ['this', 'that']
 
       compare @field_definition, with: data
+
+      @member = a_saved Marina::Db::Member
+      @member.data['test'].must_equal nil
+      @member.data['test'] = 'this'
+      @member.save
+      @member.reload
+      @member.data['test'].must_equal 'this'
     end
 
     it "adds a multi-select field with options" do
@@ -63,6 +84,13 @@ describe "AdminAddsAdditionalFieldsToMembers Integration Test" do
       @field_definition.options.must_equal ['this', 'that']
 
       compare @field_definition, with: data
+
+      @member = a_saved Marina::Db::Member
+      @member.data['test'].must_equal nil
+      @member.data['test'] = ['this']
+      @member.save
+      @member.reload
+      @member.data['test'].must_equal ['this']
     end
 
     let(:admin) { a_saved Marina::Db::Member, permissions: ['manage_field_definitions'] }
