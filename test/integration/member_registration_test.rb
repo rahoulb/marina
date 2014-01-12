@@ -23,6 +23,16 @@ describe "MemberRegistration Integration Test" do
       @member.receives_mailshots.must_equal false
       @member.current_subscription.must_equal nil
       @member.log_entries.first.kind_of?(Marina::Db::LogEntry::Registration).must_equal true
+
+      data = JSON.parse(response.body)
+      data["id"].must_equal @member.id
+      data["username"].must_equal @member.username
+      data["email"].must_equal @member.email
+      data["firstName"].must_equal @member.first_name
+      data["lastName"].must_equal @member.last_name
+      data["name"].must_equal @member.name
+      data["subscriptionPlan"].must_equal ''
+      data["subscriptionActive"].must_equal false
     end
 
     let(:mailing_list_processor) { mock 'Mailing List Processor' }
