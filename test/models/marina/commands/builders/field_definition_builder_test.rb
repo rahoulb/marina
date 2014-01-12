@@ -5,6 +5,6 @@ describe Marina::Commands::Builders::FieldDefinitionBuilder do
   subject { Marina::Commands::Builders::FieldDefinitionBuilder.new }
 
   it "requires the :add_field_definitions permission" do
-    subject.permission.must_equal :add_field_definitions
+    subject.permission.must_equal :manage_field_definitions
   end
 end

@@ -119,8 +119,23 @@ describe Marina::Member do
     end
   end
 
+  describe "permissions" do
+    before do
+      subject.permissions = ['do_something']
+    end
+
+    it "can do an action if the permission is recorded" do
+      subject.can(:do_something).must_equal true
+    end
+
+    it "cannot do an action if the permission is not recorded" do
+      subject.can(:do_something_else).wont_equal true
+    end
+
+  end
+
   let(:member_class) do 
-    Class.new(Struct.new(:first_name, :last_name, :password, :password_confirmation, :encrypted_password, :subscriptions, :api_token)) do
+    Class.new(Struct.new(:first_name, :last_name, :password, :password_confirmation, :encrypted_password, :subscriptions, :api_token, :permissions)) do
       include Marina::Member
 
       class << self

@@ -16,9 +16,7 @@ class Marina::Db::Member < ActiveRecord::Base
   before_save :encrypt_password
   before_create :generate_api_token
 
-  def can do_something
-    true
-  end
+  serialize :permissions, Array
 
   def current_subscription
     subscriptions.active.first
@@ -36,7 +34,7 @@ class Marina::Db::Member < ActiveRecord::Base
 
   class SHA256Encryptor
     def encrypt password
-      Digest::SHA256.hexdigest password
+      Digest::SHA256.hexdigest password.to_s
     end
   end
 end

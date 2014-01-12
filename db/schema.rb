@@ -46,7 +46,6 @@ ActiveRecord::Schema.define(version: 20140108181130) do
     t.string   "name",       null: false
     t.string   "label",      null: false
     t.string   "type",       null: false
-    t.string   "string",     null: false
     t.text     "options"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -100,7 +99,7 @@ ActiveRecord::Schema.define(version: 20140108181130) do
     t.string   "encrypted_password"
     t.string   "api_token"
     t.boolean  "receives_mailshots", default: false, null: false
-    t.boolean  "admin",              default: false, null: false
+    t.text     "permissions"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -9,6 +9,10 @@ module Marina
     # current_subscription (which returns nil or a subscription that answers to #active and #name)
     # subscriptions (which answers to #build)
     # the implementing class should answer #encryption_strategy with a class that answers to #encrypt(password)
+    #
+    def can action
+      return (permissions || []).include? action.to_s
+    end
 
     def name
       "#{first_name} #{last_name}"
