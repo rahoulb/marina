@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140107190823) do
+ActiveRecord::Schema.define(version: 20140108181130) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -40,6 +40,19 @@ ActiveRecord::Schema.define(version: 20140107190823) do
   end
 
   add_index "marina_db_asset_pages", ["site_id", "name"], name: "index_marina_db_asset_pages_on_site_id_and_name", unique: true, using: :btree
+
+  create_table "marina_db_field_definitions", force: true do |t|
+    t.integer  "site_id"
+    t.string   "name",       null: false
+    t.string   "label",      null: false
+    t.string   "type",       null: false
+    t.string   "string",     null: false
+    t.text     "options"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marina_db_field_definitions", ["site_id"], name: "index_marina_db_field_definitions_on_site_id", using: :btree
 
   create_table "marina_db_log_entries", force: true do |t|
     t.integer  "owner_id"
@@ -92,6 +105,7 @@ ActiveRecord::Schema.define(version: 20140107190823) do
     t.datetime "updated_at"
   end
 
+  add_index "marina_db_members", ["site_id", "api_token"], name: "index_marina_db_members_on_site_id_and_api_token", unique: true, using: :btree
   add_index "marina_db_members", ["site_id", "email"], name: "index_marina_db_members_on_site_id_and_email", using: :btree
   add_index "marina_db_members", ["site_id", "last_name"], name: "index_marina_db_members_on_site_id_and_last_name", using: :btree
   add_index "marina_db_members", ["site_id", "username"], name: "index_marina_db_members_on_site_id_and_username", using: :btree
