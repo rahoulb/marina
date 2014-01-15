@@ -35,6 +35,13 @@ describe Marina::FieldDefinition do
         subject.options.must_equal []
       end
     end
+
+    describe "for checkbox fields" do
+      it "sets the type" do
+        subject.kind = 'checkbox'
+        subject.type.must_equal 'Marina::Db::FieldDefinition::Boolean'
+      end
+    end
   end
 
   describe "reading the kind of the field" do
@@ -54,6 +61,10 @@ describe Marina::FieldDefinition do
       subject.type = 'Marina::Db::FieldDefinition::MultiSelect'
       subject.kind.must_equal 'multi_select'
     end
+    it "recognises checkbox fields" do
+      subject.type = 'Marina::Db::FieldDefinition::Boolean'
+      subject.kind.must_equal 'checkbox'
+    end
   end
 
   describe "matching against members" do
@@ -65,6 +76,17 @@ describe Marina::FieldDefinition do
       it "matches if the given value matches" do
         subject.text_field_match(member, 'this').must_equal true
         subject.text_field_match(member, 'that').wont_equal true
+      end
+    end
+
+    describe "for checkbox fields" do
+      let(:member) { stub 'Member', data: { 'first_field' => false } }
+
+      it "matches if the given value matches" do
+        subject.boolean_match(member, false).must_equal true
+        subject.boolean_match(member, true).wont_equal true
+        subject.boolean_match(member, 'false').must_equal true
+        subject.boolean_match(member, 'true').wont_equal true
       end
     end
 

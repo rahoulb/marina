@@ -17,6 +17,12 @@ class Marina::Db::FieldDefinition < ActiveRecord::Base
 
   end
 
+  class Boolean < Marina::Db::FieldDefinition
+    def matches member, value
+      boolean_match member, value
+    end
+  end
+
   class MultiSelect < Marina::Db::FieldDefinition
     def matches member, values
       multi_select_match member, values

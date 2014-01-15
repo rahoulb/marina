@@ -37,8 +37,8 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
   it "finds members with no privacy settings by custom check-box fields" do
     setup_checkbox_fields
     setup_members_with_checkbox_fields
-    @members = find_members_with_checkbox_fields_selected
-    verify_checkbox @members
+    find_members_with_checkbox_fields_selected
+    verify_filtered_members
   end
 
   it "finds members with no privacy settings by custom text fields" do
@@ -63,6 +63,11 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
   def setup_text_fields
     @first_field = a_saved Marina::Db::FieldDefinition, name: 'first', label: 'First', kind: 'short_text'
     @second_field = a_saved Marina::Db::FieldDefinition, name: 'second', label: 'Second', kind: 'long_text'
+  end
+
+  def setup_checkbox_fields
+    @first_field = a_saved Marina::Db::FieldDefinition, name: 'first', label: 'First', kind: 'checkbox'
+    @second_field = a_saved Marina::Db::FieldDefinition, name: 'second', label: 'Second', kind: 'checkbox'
   end
 
   def setup_members
@@ -99,6 +104,13 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
     @match = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => 'this', 'second' => 'rock' }
   end
 
+  def setup_members_with_checkbox_fields
+    @private = a_saved Marina::Db::Member, visible_to: 'none', data: { 'first' => true, 'second' => false }
+    @no_matches = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => false, 'second' => true }
+    @partial_matches = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => false, 'second' => false }
+    @match = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => true, 'second' => false }
+  end
+
   def find_latest_members
     get "/api/members_directory/latest_members/3", format: 'json'
     response.status.must_equal 200
@@ -123,6 +135,10 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
 
   def find_members_with_text_fields_selected
     get "/api/members_directory/members_search?first=this&second=rock", format: 'json'
+  end
+
+  def find_members_with_checkbox_fields_selected
+    get "/api/members_directory/members_search?first=true&second=false", format: 'json'
   end
 
   def compare_data_for member, params

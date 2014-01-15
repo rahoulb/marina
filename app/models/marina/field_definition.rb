@@ -8,6 +8,7 @@ module Marina
       when 'Marina::Db::FieldDefinition::LongText' then 'long_text'
       when 'Marina::Db::FieldDefinition::Select' then 'drop_down'
       when 'Marina::Db::FieldDefinition::MultiSelect' then 'multi_select'
+      when 'Marina::Db::FieldDefinition::Boolean' then 'checkbox'
       end
     end
 
@@ -18,6 +19,7 @@ module Marina
       when 'long_text' then 'Marina::Db::FieldDefinition::LongText'
       when 'drop_down' then 'Marina::Db::FieldDefinition::Select'
       when 'multi_select' then 'Marina::Db::FieldDefinition::MultiSelect'
+      when 'checkbox' then 'Marina::Db::FieldDefinition::Boolean'
       end
     end
 
@@ -25,6 +27,11 @@ module Marina
     # ought to move these into their own modules
     def text_field_match member, value
       member.data[self.name].to_s == value.to_s
+    end
+
+    def boolean_match member, value
+      value = (value == true) || (value.to_s.downcase == 'true') || (value == 1) || (value == '1')
+      member.data[self.name] == value
     end
 
     def multi_select_match member, values
