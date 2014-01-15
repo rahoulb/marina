@@ -14,7 +14,7 @@ class Marina::Db::Member < ActiveRecord::Base
   scope :mailshot_receivers, -> { where(receives_mailshots: true) }
   scope :by_visibility, -> (visibility) { where(visible_to: visibility) }
   scope :by_last_name, -> (last_name) { where('last_name like ?', "#{last_name}%") }
-  scope :latest_members, -> (params = {}) { by_visibility(params[:visible_to] || 'all').order(:created_at).limit(params[:count] || 6) }
+  scope :latest_members, -> (count) { order(:created_at).limit(count) }
 
   before_save :encrypt_password
   before_create :generate_api_token

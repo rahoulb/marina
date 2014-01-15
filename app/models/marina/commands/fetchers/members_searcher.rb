@@ -8,7 +8,7 @@ module Marina
       class MembersSearcher < Fetcher
 
         def do_fetch params = {}
-          fetcher = data_store.by_visibility(visibility)
+          fetcher = basic_fetcher
           fetcher = fetcher.by_last_name(params[:last_name]) unless params[:last_name].blank?
 
           fetcher = filter fetcher, by: params if custom_fields_in params
@@ -17,6 +17,11 @@ module Marina
         end
 
         protected
+
+        def basic_fetcher
+          return data_store.by_visibility(visibility) if user.nil? || !user.can(:access_all_members)
+          return data_store.all
+        end
 
         def visibility
           return "all" if user.nil?

@@ -13,7 +13,8 @@ describe Marina::Commands::Fetchers::LatestMembersFetcher do
     before { subject.user = nil }
 
     it "finds the latest members with their privacy set to none" do
-      data_store.expects(:latest_members).with(visible_to: 'all', count: 5).returns(members)
+      data_store.expects(:by_visibility).with('all').returns(members)
+      members.expects(:latest_members).with(5).returns(members)
 
       results = nil
       subject.fetch count: 5 do | found |
@@ -21,7 +22,20 @@ describe Marina::Commands::Fetchers::LatestMembersFetcher do
       end
       results.must_equal members
     end
+  end
 
+  describe "when the user has all access" do
+    before { user.stubs(:can).with(:access_all_members).returns(true) }
+
+    it "finds the latest members with their privacy set to none" do
+      data_store.expects(:latest_members).with(5).returns(members)
+
+      results = nil
+      subject.fetch count: 5 do | found |
+        results = found
+      end
+      results.must_equal members
+    end
   end
 
   let(:user) { mock 'User' }

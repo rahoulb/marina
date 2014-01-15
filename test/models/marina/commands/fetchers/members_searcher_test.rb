@@ -40,6 +40,37 @@ describe Marina::Commands::Fetchers::MembersSearcher do
     end
   end
 
+  describe "when logged in with full access" do
+    before do
+      user.stubs(:can).with(:access_all_members).returns(true)
+      data_store.expects(:all).returns(members)
+    end
+
+    it "finds members by their last_name" do
+      members.expects(:by_last_name).with('Patel').returns(members)
+
+      results = nil
+      subject.fetch last_name: 'Patel' do | found |
+        results = found
+      end
+      results.must_equal members
+    end
+
+    it "finds members by multi-select fields" do
+      first_field.expects(:matches).with(first_member, 'this, that').returns(true)
+      second_field.expects(:matches).with(first_member, 'whatever').returns(true)
+
+      first_field.expects(:matches).with(second_member, 'this, that').returns(true)
+      second_field.expects(:matches).with(second_member, 'whatever').returns(false)
+
+      results = nil
+      subject.fetch first: 'this, that', second: 'whatever' do | found |
+        results = found
+      end
+      results.must_equal [first_member]
+    end
+  end
+
   let(:user) { mock 'User' }
   let(:data_store) { mock 'Marina::Db::Members' }
   let(:members) { [first_member, second_member] }
