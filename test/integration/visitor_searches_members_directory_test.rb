@@ -16,8 +16,8 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
 
   it "finds members with no privacy settings by a letter in their last name" do
     setup_members
-    @members = find_members_starting_with 'J'
-    verify_starting_with @members, 'J'
+    find_members_starting_with 'J'
+    verify_starting_with_a_letter
   end
 
   it "finds members with no privacy settings by custom multi-select fields" do
@@ -70,6 +70,10 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
     response.status.must_equal 200
   end
 
+  def find_members_starting_with letter
+    get "/api/members_directory/members_search?last_name=#{letter}", format: 'json'
+  end
+
   def compare_data_for member, params
     data = params[:against]
     data['id'].must_equal member.id
@@ -95,5 +99,10 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
   def verify_by_last_name
     data.size.must_equal 1
     compare_data_for @smith, against: data.first
+  end
+
+  def verify_starting_with_a_letter
+    data.size.must_equal 1
+    compare_data_for @jones, against: data.first
   end
 end
