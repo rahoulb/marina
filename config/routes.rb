@@ -20,5 +20,9 @@ Marina::Application.routes.draw do
     resources :members
     resources :field_definitions
     resources :pin_payment_notifications, only: [:create]
+    namespace :members_directory do
+      resources :latest_members, only: [:show]
+
+    end
   end
 end

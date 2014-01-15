@@ -12,12 +12,14 @@ class Marina::Db::Member < ActiveRecord::Base
   has_many :log_entries, -> { order('created_at desc') }, class_name: 'Marina::Db::LogEntry', as: :owner, dependent: :destroy
 
   scope :mailshot_receivers, -> { where(receives_mailshots: true) }
+  scope :latest_members, -> (params = {}) { where(visible_to: params[:visible_to] || 'all').order(:created_at).limit(params[:count] || 6) }
 
   before_save :encrypt_password
   before_create :generate_api_token
 
   serialize :permissions, Array
   serialize :data, Hash
+  serialize :visible_plans, Array
 
   def current_subscription
     subscriptions.active.first

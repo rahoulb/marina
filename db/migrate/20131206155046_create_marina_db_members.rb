@@ -6,7 +6,8 @@ class CreateMarinaDbMembers < ActiveRecord::Migration
       t.string :encrypted_password, length: 256
       t.string :api_token, length: 64
       t.boolean :receives_mailshots, default: false, null: false
-      t.text :permissions, :data
+      t.string :visible_to
+      t.text :visible_plans, :permissions, :data
 
       t.timestamps
     end
@@ -14,5 +15,6 @@ class CreateMarinaDbMembers < ActiveRecord::Migration
     add_index :marina_db_members, [:site_id, :email]
     add_index :marina_db_members, [:site_id, :last_name]
     add_index :marina_db_members, [:site_id, :api_token], unique: true
+    add_index :marina_db_members, [:site_id, :created_at, :visible_to]
   end
 end
