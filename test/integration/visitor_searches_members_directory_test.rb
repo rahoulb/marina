@@ -8,13 +8,13 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
     verify_latest_members
   end
 
-  it "finds members with no privacy settings by their surname" do
+  it "finds members with no privacy settings by their last name" do
     setup_members
-    @members = find_members_called 'Smith'
-    verify_by_surname @members, 'Smith'
+    find_members_called 'Smith'
+    verify_by_last_name
   end
 
-  it "finds members with no privacy settings by a letter in their surname" do
+  it "finds members with no privacy settings by a letter in their last name" do
     setup_members
     @members = find_members_starting_with 'J'
     verify_starting_with @members, 'J'
@@ -48,10 +48,12 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
     verify_text @members
   end
 
+  let(:data) { JSON.parse(response.body)['members'] }
+
   def setup_members
     @do_not_find = []
-    3.times do | i |
-      @do_not_find << a_saved(Marina::Db::Member, visible_to: 'none')
+    ['Brown', 'Smith', 'Jones'].each do | last_name |
+      @do_not_find << a_saved(Marina::Db::Member, visible_to: 'none', last_name: last_name)
     end
     @brown = a_saved Marina::Db::Member, visible_to: 'all', last_name: 'Brown'
     @smith = a_saved Marina::Db::Member, visible_to: 'all', last_name: 'Smith'
@@ -63,11 +65,35 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
     response.status.must_equal 200
   end
 
+  def find_members_called last_name
+    get "/api/members_directory/members_search?last_name=#{last_name}", format: 'json'
+    response.status.must_equal 200
+  end
+
+  def compare_data_for member, params
+    data = params[:against]
+    data['id'].must_equal member.id
+    data['username'].must_equal member.username
+    data['email'].must_equal member.email
+    data['firstName'].must_equal member.first_name
+    data['lastName'].must_equal member.last_name
+    data['name'].must_equal member.name
+    data['subscriptionPlan'].must_equal member.subscription_plan
+    data['subscriptionActive'].must_equal member.subscription_active
+  end
+
   def verify_latest_members
-    data = JSON.parse(response.body)['members']
     data.size.must_equal 3
     brown = data.find { | d | d['id'] == @brown.id }
+    compare_data_for @brown, against: brown
     smith = data.find { | d | d['id'] == @smith.id }
+    compare_data_for @smith, against: smith
     jones = data.find { | d | d['id'] == @jones.id }
+    compare_data_for @jones, against: jones
+  end
+
+  def verify_by_last_name
+    data.size.must_equal 1
+    compare_data_for @smith, against: data.first
   end
 end

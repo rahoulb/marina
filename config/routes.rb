@@ -22,6 +22,7 @@ Marina::Application.routes.draw do
     resources :pin_payment_notifications, only: [:create]
     namespace :members_directory do
       resources :latest_members, only: [:show]
+      resource :members_search, only: [:show], controller: 'members_search'
 
     end
   end

@@ -3,7 +3,7 @@ class Api::MembersDirectory::LatestMembersController < ApplicationController
 
   def show
     latest_members_finder.fetch count: params[:id] do | found |
-      render action: 'index', locals: { members: found }
+      render template: '/api/members_directory/members_search/index', locals: { members: found }
     end
   end
 

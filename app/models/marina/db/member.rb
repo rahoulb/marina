@@ -12,7 +12,9 @@ class Marina::Db::Member < ActiveRecord::Base
   has_many :log_entries, -> { order('created_at desc') }, class_name: 'Marina::Db::LogEntry', as: :owner, dependent: :destroy
 
   scope :mailshot_receivers, -> { where(receives_mailshots: true) }
-  scope :latest_members, -> (params = {}) { where(visible_to: params[:visible_to] || 'all').order(:created_at).limit(params[:count] || 6) }
+  scope :by_visibility, -> (visibility) { where(visible_to: visibility) }
+  scope :by_last_name, -> (last_name) { where('last_name like ?', "#{last_name}%") }
+  scope :latest_members, -> (params = {}) { by_visibility(params[:visible_to] || 'all').order(:created_at).limit(params[:count] || 6) }
 
   before_save :encrypt_password
   before_create :generate_api_token
