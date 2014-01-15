@@ -21,6 +21,12 @@ module Marina
       end
     end
 
+    # these matchers are used by sub-classes.
+    # ought to move these into their own modules
+    def drop_down_match member, value
+      member.data[self.name].to_s == value.to_s
+    end
+
     def multi_select_match member, values
       selected = member.data[self.name]
       return false if selected.blank?

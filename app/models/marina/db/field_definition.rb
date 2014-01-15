@@ -12,7 +12,9 @@ class Marina::Db::FieldDefinition < ActiveRecord::Base
   end
 
   class Select < Marina::Db::FieldDefinition
-
+    def matches member, value
+      drop_down_match member, value
+    end
   end
 
   class MultiSelect < Marina::Db::FieldDefinition

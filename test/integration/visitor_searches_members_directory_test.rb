@@ -30,8 +30,8 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
   it "finds members with no privacy settings by custom drop-down fields" do
     setup_drop_down_fields
     setup_members_with_drop_down_fields
-    @members = find_members_with_drop_down_values_selected
-    verify_drop_down @members
+    find_members_with_drop_down_values_selected
+    verify_drop_down_members
   end
 
   it "finds members with no privacy settings by custom check-box fields" do
@@ -49,6 +49,16 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
   end
 
   let(:data) { JSON.parse(response.body)['members'] }
+
+  def setup_multi_select_fields
+    @first_multi_select_field = a_saved Marina::Db::FieldDefinition, name: 'first', label: 'First', kind: 'multi_select', options: ['this', 'that', 'the other']
+    @second_multi_select_field = a_saved Marina::Db::FieldDefinition, name: 'second', label: 'Second', kind: 'multi_select', options: ['punk', 'rock', 'house']
+  end
+
+  def setup_drop_down_fields
+    @first_multi_select_field = a_saved Marina::Db::FieldDefinition, name: 'first', label: 'First', kind: 'drop_down', options: ['this', 'that', 'the other']
+    @second_multi_select_field = a_saved Marina::Db::FieldDefinition, name: 'second', label: 'Second', kind: 'drop_down', options: ['punk', 'rock', 'house']
+  end
 
   def setup_members
     @do_not_find = []
@@ -68,9 +78,12 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
     @match = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => ['this', 'that'], 'second' => ['rock'] }
   end
 
-  def setup_multi_select_fields
-    @first_multi_select_field = a_saved Marina::Db::FieldDefinition, name: 'first', label: 'First', kind: 'multi_select', options: ['this', 'that', 'the other']
-    @second_multi_select_field = a_saved Marina::Db::FieldDefinition, name: 'second', label: 'Second', kind: 'multi_select', options: ['punk', 'rock', 'house']
+  def setup_members_with_drop_down_fields
+    @private = a_saved Marina::Db::Member, visible_to: 'none', data: { 'first' => 'this', 'second' => 'rock' }
+    @no_matches = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => '', 'second' => '' }
+    @partial_match = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => 'that', 'second' => 'rock' }
+    @another_partial_match = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => 'this', 'second' => 'house' }
+    @match = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => 'this', 'second' => 'rock' }
   end
 
   def find_latest_members
@@ -89,6 +102,10 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
 
   def find_members_with_multi_select_values_selected
     get "/api/members_directory/members_search?first=this,that&second=rock", format: 'json'
+  end
+
+  def find_members_with_drop_down_values_selected
+    get "/api/members_directory/members_search?first=this&second=rock", format: 'json'
   end
 
   def compare_data_for member, params
@@ -124,6 +141,11 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
   end
 
   def verify_multi_select_members
+    data.size.must_equal 1
+    compare_data_for @match, against: data.first
+  end
+
+  def verify_drop_down_members
     data.size.must_equal 1
     compare_data_for @match, against: data.first
   end

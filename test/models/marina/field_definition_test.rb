@@ -59,6 +59,15 @@ describe Marina::FieldDefinition do
   describe "matching against members" do
     before { subject.name = 'first_field' }
 
+    describe "for drop-down fields" do
+      let(:member) { stub 'Member', data: { 'first_field' => 'this' } }
+
+      it "matches if the given value matches" do
+        subject.drop_down_match(member, 'this').must_equal true
+        subject.drop_down_match(member, 'that').wont_equal true
+      end
+    end
+
     describe "for multi select fields" do
       let(:member) { stub 'Member', data: { 'first_field' => ['this', 'that'] } }
 
