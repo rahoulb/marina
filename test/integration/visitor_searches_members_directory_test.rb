@@ -17,7 +17,7 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
   it "finds members with no privacy settings by a letter in their last name" do
     setup_members
     find_members_starting_with 'J'
-    verify_filtered_members
+    verify_by_starting_letter
   end
 
   it "finds members with no privacy settings by custom multi-select fields" do
@@ -152,8 +152,13 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
     compare_data_for @smith, against: data.first
   end
 
-  def verify_filtered_members
+  def verify_by_starting_letter
     data.size.must_equal 1
     compare_data_for @jones, against: data.first
+  end
+
+  def verify_filtered_members
+    data.size.must_equal 1
+    compare_data_for @match, against: data.first
   end
 end

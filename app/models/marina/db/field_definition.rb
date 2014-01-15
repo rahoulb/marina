@@ -4,17 +4,17 @@ class Marina::Db::FieldDefinition < ActiveRecord::Base
   serialize :options, Array
 
   class ShortText < Marina::Db::FieldDefinition
-
-  end
-
-  class LongText < Marina::Db::FieldDefinition
-
-  end
-
-  class Select < Marina::Db::FieldDefinition
     def matches member, value
-      drop_down_match member, value
+      text_field_match member, value
     end
+  end
+
+  class LongText < ShortText
+
+  end
+
+  class Select < ShortText
+
   end
 
   class MultiSelect < Marina::Db::FieldDefinition
