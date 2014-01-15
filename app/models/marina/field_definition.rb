@@ -20,5 +20,15 @@ module Marina
       when 'multi_select' then 'Marina::Db::FieldDefinition::MultiSelect'
       end
     end
+
+    def multi_select_match member, values
+      selected = member.data[self.name]
+      return false if selected.blank?
+      values = values.split(',')
+      values.each do | value |
+        return false unless selected.include? value.strip
+      end
+      return true
+    end
   end
 end

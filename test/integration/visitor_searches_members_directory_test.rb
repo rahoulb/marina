@@ -23,8 +23,8 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
   it "finds members with no privacy settings by custom multi-select fields" do
     setup_multi_select_fields
     setup_members_with_multi_select_fields
-    @members = find_members_with_multi_select_values_selected
-    verify_multi_select_valued @members
+    find_members_with_multi_select_values_selected
+    verify_multi_select_members
   end
   
   it "finds members with no privacy settings by custom drop-down fields" do
@@ -60,6 +60,19 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
     @jones = a_saved Marina::Db::Member, visible_to: 'all', last_name: 'Jones'
   end
 
+  def setup_members_with_multi_select_fields
+    @private = a_saved Marina::Db::Member, visible_to: 'none', data: { 'first' => ['this', 'that'], 'second' => ['rock'] }
+    @no_matches = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => [], 'second' => [] }
+    @partial_match = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => ['this'], 'second' => ['rock'] }
+    @another_partial_match = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => ['this', 'that'], 'second' => ['house'] }
+    @match = a_saved Marina::Db::Member, visible_to: 'all', data: { 'first' => ['this', 'that'], 'second' => ['rock'] }
+  end
+
+  def setup_multi_select_fields
+    @first_multi_select_field = a_saved Marina::Db::FieldDefinition, name: 'first', label: 'First', kind: 'multi_select', options: ['this', 'that', 'the other']
+    @second_multi_select_field = a_saved Marina::Db::FieldDefinition, name: 'second', label: 'Second', kind: 'multi_select', options: ['punk', 'rock', 'house']
+  end
+
   def find_latest_members
     get "/api/members_directory/latest_members/3", format: 'json'
     response.status.must_equal 200
@@ -72,6 +85,10 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
 
   def find_members_starting_with letter
     get "/api/members_directory/members_search?last_name=#{letter}", format: 'json'
+  end
+
+  def find_members_with_multi_select_values_selected
+    get "/api/members_directory/members_search?first=this,that&second=rock", format: 'json'
   end
 
   def compare_data_for member, params
@@ -104,5 +121,10 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
   def verify_starting_with_a_letter
     data.size.must_equal 1
     compare_data_for @jones, against: data.first
+  end
+
+  def verify_multi_select_members
+    data.size.must_equal 1
+    compare_data_for @match, against: data.first
   end
 end

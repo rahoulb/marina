@@ -16,7 +16,9 @@ class Marina::Db::FieldDefinition < ActiveRecord::Base
   end
 
   class MultiSelect < Marina::Db::FieldDefinition
-
+    def matches member, values
+      multi_select_match member, values
+    end
   end
 
 end

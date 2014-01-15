@@ -2,7 +2,7 @@ class Api::MembersDirectory::MembersSearchController < ApplicationController
   respond_to :json
 
   def show
-    members_searcher.fetch last_name: params[:last_name] do | found |
+    members_searcher.fetch params do | found |
       render action: 'index', locals: { members: found }
     end
   end
@@ -12,7 +12,8 @@ class Api::MembersDirectory::MembersSearchController < ApplicationController
   def members_searcher
     Marina::Commands::Fetchers::MembersSearcher.new({
       user: current_user,
-      data_store: Marina::Db::Member
+      data_store: Marina::Db::Member, 
+      field_definitions: Marina::Db::FieldDefinition.all
     })
   end
 end

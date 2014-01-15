@@ -56,8 +56,21 @@ describe Marina::FieldDefinition do
     end
   end
 
+  describe "matching against members" do
+    before { subject.name = 'first_field' }
+
+    describe "for multi select fields" do
+      let(:member) { stub 'Member', data: { 'first_field' => ['this', 'that'] } }
+
+      it "matches if all the given values are selected" do
+        subject.multi_select_match(member, 'this,that').must_equal true
+        subject.multi_select_match(member, 'this,that,theother').wont_equal true
+      end
+    end
+  end
+
   let(:field_definition_class) do
-    Class.new(Struct.new(:type, :options)) do
+    Class.new(Struct.new(:type, :options, :name)) do
       include Marina::FieldDefinition
 
     end
