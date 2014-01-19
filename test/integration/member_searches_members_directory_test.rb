@@ -1,49 +1,54 @@
-require_relative "../test_helper"
+require_relative '../test_helper'
 require_relative '../support/field_helpers'
 
-describe "VisitorSearchesMembersDirectory Integration Test" do
+describe "MemberSearchesMembersDirectory Integration Test" do
   include Test::FieldHelpers
 
-  it "finds the latest members with no privacy settings" do
+  before do
+    subscription.touch # ensure the subscription is created
+    login_as member
+  end
+
+  it "finds the latest members with matching privacy settings" do
     setup_members
     find_latest_members
     verify_latest_members
   end
 
-  it "finds members with no privacy settings by their last name" do
+  it "finds members with matching privacy settings by their last name" do
     setup_members
     find_members_called 'Smith'
     verify_by_last_name
   end
 
-  it "finds members with no privacy settings by a letter in their last name" do
+  it "finds members with matching privacy settings by a letter in their last name" do
     setup_members
     find_members_starting_with 'J'
     verify_by_starting_letter
   end
 
-  it "finds members with no privacy settings by custom multi-select fields" do
+  it "finds members with matching privacy settings by custom multi-select fields" do
     setup_multi_select_fields
     setup_members_with_multi_select_fields
     find_members_with_multi_select_values_selected
     verify_filtered_members
   end
   
-  it "finds members with no privacy settings by custom drop-down fields" do
+  it "finds members with matching privacy settings by custom drop-down fields" do
     setup_drop_down_fields
     setup_members_with_drop_down_fields
     find_members_with_drop_down_values_selected
     verify_filtered_members
   end
 
-  it "finds members with no privacy settings by custom check-box fields" do
+  it "finds members with matching privacy settings by custom check-box fields" do
     setup_checkbox_fields
     setup_members_with_checkbox_fields
     find_members_with_checkbox_fields_selected
     verify_filtered_members
   end
 
-  it "finds members with no privacy settings by custom text fields" do
+  it "finds members with matching privacy settings by custom text fields" do
     setup_text_fields
     setup_members_with_text_fields
     find_members_with_text_fields_selected
@@ -51,14 +56,18 @@ describe "VisitorSearchesMembersDirectory Integration Test" do
   end
 
   let(:data) { JSON.parse(response.body)['members'] }
+  let(:standard_plan) { a_saved Marina::Db::Subscription::PaidPlan }
+  let(:premium_plan) { a_saved Marina::Db::Subscription::PaidPlan }
+  let(:member) { a_saved Marina::Db::Member }
+  let(:subscription) { a_saved Marina::Db::Subscription, member: member, plan: standard_plan }
 
   def setup_members
     @do_not_find = []
-    ['Brown', 'Smith', 'Jones'].each do | last_name |
-      @do_not_find << a_saved(Marina::Db::Member, visible_to: 'none', last_name: last_name)
-    end
-    @brown = a_saved Marina::Db::Member, visible_to: 'all', last_name: 'Brown'
-    @smith = a_saved Marina::Db::Member, visible_to: 'all', last_name: 'Smith'
+    @do_not_find << a_saved(Marina::Db::Member, visible_to: 'none', last_name: 'Hidden')
+    @do_not_find << a_saved(Marina::Db::Member, visible_to: 'some', visible_plans: [premium_plan.id])
+
+    @brown = a_saved Marina::Db::Member, visible_to: 'some', visible_plans: [standard_plan.id, premium_plan.id], last_name: 'Brown'
+    @smith = a_saved Marina::Db::Member, visible_to: 'some', visible_plans: [standard_plan.id], last_name: 'Smith'
     @jones = a_saved Marina::Db::Member, visible_to: 'all', last_name: 'Jones'
   end
 

@@ -36,6 +36,10 @@ module Marina
       return current_subscription.nil? ? '' : current_subscription.name
     end
 
+    def current_subscription_plan
+      current_subscription.plan
+    end
+
     def build_subscription
       subscriptions.build
     end

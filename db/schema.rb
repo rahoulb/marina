@@ -99,14 +99,16 @@ ActiveRecord::Schema.define(version: 20140108181130) do
     t.string   "encrypted_password"
     t.string   "api_token"
     t.boolean  "receives_mailshots", default: false, null: false
+    t.string   "visible_to"
+    t.text     "visible_plans"
     t.text     "permissions"
     t.text     "data"
-    t.text     "visible_to"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "marina_db_members", ["site_id", "api_token"], name: "index_marina_db_members_on_site_id_and_api_token", unique: true, using: :btree
+  add_index "marina_db_members", ["site_id", "created_at", "visible_to"], name: "index_marina_db_members_on_site_id_and_created_at_and_visible_to", using: :btree
   add_index "marina_db_members", ["site_id", "email"], name: "index_marina_db_members_on_site_id_and_email", using: :btree
   add_index "marina_db_members", ["site_id", "last_name"], name: "index_marina_db_members_on_site_id_and_last_name", using: :btree
   add_index "marina_db_members", ["site_id", "username"], name: "index_marina_db_members_on_site_id_and_username", using: :btree
