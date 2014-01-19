@@ -12,7 +12,8 @@ class Marina::Db::Member < ActiveRecord::Base
   has_many :log_entries, -> { order('created_at desc') }, class_name: 'Marina::Db::LogEntry', as: :owner, dependent: :destroy
 
   scope :mailshot_receivers, -> { where(receives_mailshots: true) }
-  scope :by_visibility, -> (visibility) { where(visible_to: visibility) }
+  scope :visible_to_all, -> { where(visible_to: 'all') }
+  scope :visible_to_members, -> { where('visible_to = ? or visible_to = ?', 'all', 'some') }
   scope :by_last_name, -> (last_name) { where('last_name like ?', "#{last_name}%") }
   scope :all_latest_members, -> { order(:created_at) }
   scope :latest_members, -> (count) { order(:created_at).limit(count) }

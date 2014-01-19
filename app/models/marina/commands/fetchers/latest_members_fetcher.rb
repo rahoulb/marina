@@ -9,13 +9,14 @@ module Marina
           count = params[:count] || 6
           return visible_to_all(count) if user.nil?
           return access_all_members(count) if user.can(:access_all_members)
+          return visible_to_all(count) if user.current_subscription_plan.nil?
           return private_members(count)
         end
 
         protected
 
         def visible_to_all count
-          data_store.by_visibility('all').latest_members(count)
+          data_store.visible_to_all.latest_members(count)
         end
 
         def access_all_members count

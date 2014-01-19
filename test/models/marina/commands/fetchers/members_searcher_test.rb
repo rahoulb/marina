@@ -12,7 +12,7 @@ describe Marina::Commands::Fetchers::MembersSearcher do
   describe "when not logged in" do
     before do
       subject.user = nil
-      data_store.expects(:by_visibility).with('all').returns(members)
+      data_store.expects(:visible_to_all).returns(members)
     end
 
     it "finds members by their last_name" do
@@ -40,11 +40,43 @@ describe Marina::Commands::Fetchers::MembersSearcher do
     end
   end
 
-  describe "when logged in as a member" do
+  describe "when logged in as a member with no active subscription" do
+    before do
+      user.stubs(:can).with(:access_all_members).returns(false)
+      user.stubs(:current_subscription_plan).returns(nil)
+      data_store.expects(:visible_to_all).returns(members)
+    end
+
+    it "finds members by their last_name" do
+      members.expects(:by_last_name).with('Patel').returns(members)
+
+      results = nil
+      subject.fetch last_name: 'Patel' do | found |
+        results = found
+      end
+      results.must_equal members
+    end
+
+    it "finds members by multi-select fields" do
+      first_field.expects(:matches).with(first_member, 'this, that').returns(true)
+      second_field.expects(:matches).with(first_member, 'whatever').returns(true)
+
+      first_field.expects(:matches).with(second_member, 'this, that').returns(true)
+      second_field.expects(:matches).with(second_member, 'whatever').returns(false)
+
+      results = nil
+      subject.fetch first: 'this, that', second: 'whatever' do | found |
+        results = found
+      end
+      results.must_equal [first_member]
+    end
+  end
+
+  describe "when logged in as a member with a subscription" do
     before do
       user.stubs(:can).with(:access_all_members).returns(false)
       user.stubs(:current_subscription_plan).returns(subscription_plan)
-      data_store.expects(:all).returns(members)
+      data_store.expects(:visible_to_members).returns(members)
     end
 
     it "finds members by their last_name" do
@@ -77,6 +109,7 @@ describe Marina::Commands::Fetchers::MembersSearcher do
   describe "when logged in with full access" do
     before do
       user.stubs(:can).with(:access_all_members).returns(true)
+      user.stubs(:current_subscription_plan).returns(nil)
       data_store.expects(:all).returns(members)
     end
 

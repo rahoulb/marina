@@ -8,10 +8,19 @@ module Marina
       class MembersSearcher < Fetcher
 
         def do_fetch params = {}
-          fetcher = basic_fetcher
+          fetcher = if user.nil?
+                      basic_fetcher
+                    elsif user.can(:access_all_members)
+                      all_member_fetcher
+                    elsif user.current_subscription_plan.nil?
+                      basic_fetcher
+                    else
+                      privacy_fetcher
+                    end
           fetcher = fetcher.by_last_name(params[:last_name]) unless params[:last_name].blank?
 
           fetcher = filter fetcher, by: params if custom_fields_in params
+          fetcher = privacy_filter fetcher if !user.nil? && !user.current_subscription_plan.nil?
 
           return fetcher
         end
@@ -19,8 +28,15 @@ module Marina
         protected
 
         def basic_fetcher
-          return data_store.by_visibility(visibility) if user.nil? || !user.can(:access_all_members)
-          return data_store.all
+          data_store.visible_to_all
+        end
+
+        def all_member_fetcher
+          data_store.all
+        end
+
+        def privacy_fetcher
+          data_store.visible_to_members
         end
 
         def visibility
@@ -41,6 +57,12 @@ module Marina
               matches = false unless field.matches(member, params[field.name])
             end
             matches
+          end
+        end
+
+        def privacy_filter members
+          members.select do | member |
+            (member.visible_to == 'all') || ((member.visible_to == 'some') && member.visible_plans.include?(user.current_subscription_plan.id))
           end
         end
 

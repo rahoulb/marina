@@ -37,7 +37,7 @@ module Marina
     end
 
     def current_subscription_plan
-      current_subscription.plan
+      current_subscription.nil? ? nil : current_subscription.plan
     end
 
     def build_subscription

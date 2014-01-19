@@ -14,7 +14,25 @@ describe Marina::Commands::Fetchers::LatestMembersFetcher do
     before { subject.user = nil }
 
     it "finds the latest members with their privacy set to none" do
-      data_store.expects(:by_visibility).with('all').returns(members)
+      data_store.expects(:visible_to_all).returns(members)
+      members.expects(:latest_members).with(5).returns(members)
+
+      results = nil
+      subject.fetch count: 5 do | found |
+        results = found
+      end
+      results.must_equal members
+    end
+  end
+
+  describe "when the user is a member with no active subscription" do
+    before do
+      user.stubs(:can).with(:access_all_members).returns(false)
+      user.stubs(:current_subscription_plan).returns(nil)
+    end
+
+    it "finds the latest members with their privacy set to none" do
+      data_store.expects(:visible_to_all).returns(members)
       members.expects(:latest_members).with(5).returns(members)
 
       results = nil
