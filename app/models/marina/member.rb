@@ -53,5 +53,9 @@ module Marina
       self.api_token = 48.random_letters
     end
 
+    def record_login
+      self.update_attribute :last_login_at, Time.now
+    end
+
   end
 end

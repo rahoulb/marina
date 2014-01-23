@@ -22,6 +22,16 @@ describe Marina::Commands::Builder do
     end
 
     it "updates an existing item" do
+      item.expects(:update_attributes!).with(params).returns(true)
+
+      results = nil
+      subject.update item, params do | updated |
+        results = updated
+      end
+      results.must_equal item
+    end
+
+    it "updates an existing item when given a numeric id" do
       data_store.expects(:find).with(123).returns(item)
       item.expects(:update_attributes!).with(params).returns(true)
 
@@ -31,6 +41,18 @@ describe Marina::Commands::Builder do
       end
       results.must_equal item
     end
+
+    it "updates an existing item when given a string id" do
+      data_store.expects(:find).with('123').returns(item)
+      item.expects(:update_attributes!).with(params).returns(true)
+
+      results = nil
+      subject.update '123', params do | updated |
+        results = updated
+      end
+      results.must_equal item
+    end
+
   end
 
   describe "when the fetcher does not have permission" do

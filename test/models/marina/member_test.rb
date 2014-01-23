@@ -1,6 +1,7 @@
 require 'minitest/autorun'
 require 'mocha/setup'
 require 'digest/sha2'
+require 'timecop'
 require_relative '../../../app/models/marina/member'
 
 describe Marina::Member do
@@ -131,7 +132,13 @@ describe Marina::Member do
     it "cannot do an action if the permission is not recorded" do
       subject.can(:do_something_else).wont_equal true
     end
+  end
 
+  it "records when a login has happened" do
+    Timecop.freeze do
+      subject.expects(:update_attribute).with(:last_login_at, Time.now)
+      subject.record_login
+    end
   end
 
   let(:member_class) do 

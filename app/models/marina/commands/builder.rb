@@ -16,8 +16,8 @@ module Marina
 
       def update id, params = nil
         check_security!
-        item = do_find id
-        item.update_attributes! params
+        item = is_id(id) ? do_find(id) : id # if we are given an ID (number or string), find the actual item
+        do_update item, params
         yield item if block_given?
       end
 
@@ -27,6 +27,16 @@ module Marina
 
       def do_find id
         data_store.find id
+      end
+
+      def do_update item, params
+        item.update_attributes! params
+      end
+
+      protected
+
+      def is_id object
+        object.is_a?(Fixnum) || object.is_a?(String)
       end
 
     end

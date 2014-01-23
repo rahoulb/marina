@@ -15,6 +15,7 @@ Marina::Application.routes.draw do
 
   namespace :api do
     resources :sessions, only: [:new, :create]
+    resource :profile
     resources :mailouts
     resources :subscription_plans
     resources :members
@@ -23,7 +24,6 @@ Marina::Application.routes.draw do
     namespace :members_directory do
       resources :latest_members, only: [:show]
       resource :members_search, only: [:show], controller: 'members_search'
-
     end
   end
 end

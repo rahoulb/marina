@@ -14,6 +14,7 @@ module Marina
           log "...member #{member}"
           raise Marina::Commands::Unauthorised.new if member.nil? || !member.verify_password(password)
           log "...authenticated"
+          member.record_login
           yield member
         end
 
