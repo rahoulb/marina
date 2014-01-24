@@ -11,5 +11,10 @@ module Marina
       # application is expected to be a Marina::Db::ReviewedPlan::Application
     end
 
+    # An application onto an approval-required plan has been rejected
+    def application_rejected application
+
+    end
+
   end
 end

@@ -22,7 +22,14 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
 
   it "registers successfully with an affiliated membership and is approved"
   it "registers successfully and is approved but the affiliated membership is rejected" 
-  it "registers but is rejected"
+
+  it "registers but is rejected" do
+    when_i_register
+    then_i_should_become_a_basic_member_with_an_application_for_the_approved_plan
+    when_my_application_is_rejected
+    then_i_should_receive_an_email_rejection_details
+    then_i_should_remain_a_basic_member
+  end
 
   def given_a_payment_processor_and_mailing_list_processor
     Rails.application.config.mailing_list_processor = mailing_list_processor
@@ -39,6 +46,18 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   def when_my_application_is_accepted
     mailing_list_processor.expects(:application_approved).with(@application, payment_processor)
     @application.accepted_by administrator, mail_processor: mailing_list_processor, payment_processor: payment_processor
+    @application.reload
+    @application.administrator.must_equal administrator
+    @application.status.must_equal 'approved'
+  end
+
+  def when_my_application_is_rejected 
+    mailing_list_processor.expects(:application_rejected).with(@application)
+    @application.rejected_by administrator, reason: 'You know nothing', mail_processor: mailing_list_processor
+    @application.reload
+    @application.administrator.must_equal administrator
+    @application.status.must_equal 'rejected'
+    @application.reason_for_rejection.must_equal 'You know nothing'
   end
 
   def when_i_register_with_invalid_details
@@ -94,6 +113,15 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
 
   def then_i_should_receive_an_email_with_payment_details
     # this is handled by the expects call in the previous step
+  end
+
+  def then_i_should_receive_an_email_rejection_details
+    # this is handled by the expects call in the previous step
+  end
+
+  def then_i_should_remain_a_basic_member 
+    @member.reload
+    @member.current_subscription.must_equal nil
   end
   
   def then_my_registration_should_be_refused
