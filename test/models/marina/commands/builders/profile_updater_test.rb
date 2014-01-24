@@ -18,7 +18,10 @@ describe Marina::Commands::Builders::ProfileUpdater do
   end
 
   describe "when logged in as a basic member" do
-    before { user.stubs(:current_subscription).returns(nil) }
+    before do
+      user.stubs(:current_subscription).returns(nil)
+      user.stubs(:can).with(:access_all_members).returns(false)
+    end
 
     it "only allows updates to basic fields" do
       user.expects(:update_attributes!).with(basic_fields).returns(true)
@@ -39,7 +42,35 @@ describe Marina::Commands::Builders::ProfileUpdater do
   end
 
   describe "when logged in as a plan member" do
-    before { user.stubs(:current_subscription).returns(plan) }
+    before do 
+      user.stubs(:current_subscription).returns(plan)
+      user.stubs(:can).with(:access_all_members).returns(false)
+    end
+
+    it "allows updates to all fields" do
+      user.expects(:update_attributes!).with(params).returns(true)
+      result = nil
+      subject.update user, params do | updated |
+        result = updated
+      end
+      result.must_equal user
+    end
+
+    it "does not allow updates to anyone other that yourself" do
+      begin
+        subject.update member, params
+      rescue Marina::Commands::Unauthorised
+        # expected
+      end
+    end
+    let(:plan) { stub 'Plan' }
+  end
+
+  describe "when logged in as an admin with access to all members" do
+    before do 
+      user.stubs(:current_subscription).returns(nil)
+      user.stubs(:can).with(:access_all_members).returns(true)
+    end
 
     it "allows updates to all fields" do
       user.expects(:update_attributes!).with(params).returns(true)

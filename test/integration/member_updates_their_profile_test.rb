@@ -60,10 +60,28 @@ describe "MemberUpdatesTheirProfile Integration Test" do
   end
 
   describe "when logged in as a member with access all members permission" do
-    describe "accessing your own profile" do
-      it "can update basic fields"
-      it "can update standard fields"
-      it "can update custom fields"
+    before do
+      member.update_attribute :permissions, ["access_all_members"]
+      login_as member
+    end
+
+    it "can update basic fields" do
+      when_i_update_my_basic_fields
+      then_the_update_should_happen
+      then_my_basic_fields_should_be_updated
+    end
+
+    it "can update standard fields" do
+      when_i_update_my_standard_fields
+      then_the_update_should_happen
+      then_my_standard_fields_should_be_updated
+    end
+
+    it "can update custom fields" do
+      given_some_custom_fields
+      when_i_update_my_custom_fields
+      then_the_update_should_happen
+      then_my_custom_fields_should_be_updated
     end
 
     describe "accessing another member's profile" do

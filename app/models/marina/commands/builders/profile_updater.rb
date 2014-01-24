@@ -12,7 +12,7 @@ module Marina
 
         def do_update member, params
           raise Unauthorised.new if user != member
-          params = params.slice(:username, :password, :password_confirmation, :title, :email, :first_name, :last_name) if user.current_subscription.nil?
+          params = params.slice(:username, :password, :password_confirmation, :title, :email, :first_name, :last_name) if user.current_subscription.nil? && !user.can(:access_all_members)
           member.update_attributes! params
         end
 
