@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140108181130) do
+ActiveRecord::Schema.define(version: 20140124150704) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -112,6 +112,7 @@ ActiveRecord::Schema.define(version: 20140108181130) do
     t.string   "country"
     t.string   "telephone"
     t.string   "web_address"
+    t.string   "source"
     t.datetime "last_login_at"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -138,6 +139,22 @@ ActiveRecord::Schema.define(version: 20140108181130) do
   end
 
   add_index "marina_db_subscription_plans", ["site_id", "name"], name: "index_marina_db_subscription_plans_on_site_id_and_name", unique: true, using: :btree
+
+  create_table "marina_db_subscription_reviewed_plan_applications", force: true do |t|
+    t.integer  "plan_id"
+    t.integer  "member_id"
+    t.integer  "administrator_id"
+    t.integer  "affiliated_organisation_id"
+    t.string   "affiliate_membership_details"
+    t.text     "supporting_information"
+    t.text     "reason_for_rejection"
+    t.text     "reason_for_affiliation_rejection"
+    t.string   "status",                           default: "awaiting_review", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "marina_db_subscription_reviewed_plan_applications", ["plan_id"], name: "reviewed_plan_applications_plan_id", using: :btree
 
   create_table "marina_db_subscriptions", force: true do |t|
     t.integer  "plan_id"

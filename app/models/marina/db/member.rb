@@ -10,6 +10,7 @@ class Marina::Db::Member < ActiveRecord::Base
   has_many :mailouts_received, class_name: 'Marina::Db::Mailout::Delivery', foreign_key: 'member_id', dependent: :destroy
   has_many :subscriptions, class_name: 'Marina::Db::Subscription', foreign_key: 'member_id', dependent: :destroy
   has_many :log_entries, -> { order('created_at desc') }, class_name: 'Marina::Db::LogEntry', as: :owner, dependent: :destroy
+  has_many :plan_applications, class_name: 'Marina::Db::Subscription::ReviewedPlan::Application', foreign_key: 'member_id', dependent: :destroy
 
   scope :mailshot_receivers, -> { where(receives_mailshots: true) }
   scope :visible_to_all, -> { where(visible_to: 'all') }

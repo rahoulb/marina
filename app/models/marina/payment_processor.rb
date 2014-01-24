@@ -1,0 +1,14 @@
+module Marina
+  class PaymentProcessor
+    # register a new subscriber
+    # params - :email, :first_name, :last_name, :plan
+    def new_subscriber params = {}
+
+    end
+
+    # return the URL for a given plan and member
+    # params - :plan
+    def url_for member, params = {}
+    end
+  end
+end

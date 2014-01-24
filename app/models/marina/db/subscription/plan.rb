@@ -13,6 +13,10 @@ class Marina::Db::Subscription::Plan < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
+  def record_application_for member, params = {}
+    # do nothing
+  end
+
   class << self
     def by_feature_level feature_level
       find_each do | plan |

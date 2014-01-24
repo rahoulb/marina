@@ -14,7 +14,8 @@ module Marina
           member = data_store.create! params
           # record the registration
           registration_store.create! owner: member unless registration_store.nil?
-
+          # record any applications that require review
+          plan.record_application_for member, params.slice(:supporting_information) unless plan.nil?
 
           # and notify the rest of the world
           payment_processor.new_subscriber params.slice(:email, :first_name, :last_name).merge(plan: plan) unless payment_processor.nil?

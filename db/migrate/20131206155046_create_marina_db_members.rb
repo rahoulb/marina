@@ -14,6 +14,8 @@ class CreateMarinaDbMembers < ActiveRecord::Migration
       t.text :address
       t.string :town, :county, :postcode, :country, :telephone, :web_address, length: 32
 
+      t.string :source, length: 32
+
       t.datetime :last_login_at
       t.timestamps
     end
