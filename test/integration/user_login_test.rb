@@ -1,4 +1,4 @@
-require "test_helper"
+require_relative "../test_helper"
 
 describe "UserLogin Integration Test" do
   describe "when given a valid username and password" do

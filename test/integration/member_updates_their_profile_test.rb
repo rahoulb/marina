@@ -84,11 +84,6 @@ describe "MemberUpdatesTheirProfile Integration Test" do
       then_my_custom_fields_should_be_updated
     end
 
-    describe "accessing another member's profile" do
-      it "can update basic fields"
-      it "can update standard fields"
-      it "can update custom fields"
-    end
   end
 
   def given_some_custom_fields

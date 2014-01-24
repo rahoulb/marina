@@ -58,10 +58,11 @@ module Marina
     end
 
     def method_missing meffod, *args, &block
-      return super if allowed_methods.include? meffod
+      super
+    rescue NoMethodError => nme
       return data[meffod.to_s] if self[:data].has_key?(meffod.to_s)
       return set_data_for(meffod, args) if meffod.to_s =~ /(.*)=/
-      super
+      raise nme
     end
 
     protected
@@ -72,7 +73,7 @@ module Marina
     end
 
     def allowed_methods
-      [:data, :permissions, :"data=", :"permissions="]
+      self.attributes.keys + self.attributes.keys.collect { | k | :"#{k}=" }
     end
 
   end
