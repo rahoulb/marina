@@ -37,6 +37,7 @@ describe Marina::Commands::Fetchers::Authenticator do
 
     it "returns the member" do
       member.expects(:verify_password).with('secret').returns(true)
+      member.expects(:record_login)
 
       result = nil
       subject.authenticate('test101', 'secret') do | m |

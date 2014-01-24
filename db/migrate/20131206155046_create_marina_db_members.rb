@@ -9,6 +9,12 @@ class CreateMarinaDbMembers < ActiveRecord::Migration
       t.string :visible_to
       t.text :visible_plans, :permissions, :data
 
+      t.text :biography
+      t.string :title, length: 16
+      t.text :address
+      t.string :town, :county, :postcode, :country, :telephone, :web_address, length: 32
+
+      t.datetime :last_login_at
       t.timestamps
     end
     add_index :marina_db_members, [:site_id, :username]
