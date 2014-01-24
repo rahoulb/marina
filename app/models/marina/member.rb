@@ -57,5 +57,23 @@ module Marina
       self.update_attribute :last_login_at, Time.now
     end
 
+    def method_missing meffod, *args, &block
+      return super if allowed_methods.include? meffod
+      return data[meffod.to_s] if self[:data].has_key?(meffod.to_s)
+      return set_data_for(meffod, args) if meffod.to_s =~ /(.*)=/
+      super
+    end
+
+    protected
+
+    def set_data_for meffod, args
+      key = meffod.to_s.gsub('=', '')
+      self.data[key] = args.first
+    end
+
+    def allowed_methods
+      [:data, :permissions, :"data=", :"permissions="]
+    end
+
   end
 end

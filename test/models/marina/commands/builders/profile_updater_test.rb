@@ -36,7 +36,28 @@ describe Marina::Commands::Builders::ProfileUpdater do
         # expected
       end
     end
+  end
 
+  describe "when logged in as a plan member" do
+    before { user.stubs(:current_subscription).returns(plan) }
+
+    it "allows updates to all fields" do
+      user.expects(:update_attributes!).with(params).returns(true)
+      result = nil
+      subject.update user, params do | updated |
+        result = updated
+      end
+      result.must_equal user
+    end
+
+    it "does not allow updates to anyone other that yourself" do
+      begin
+        subject.update member, params
+      rescue Marina::Commands::Unauthorised
+        # expected
+      end
+    end
+    let(:plan) { stub 'Plan' }
   end
 
   let(:user) { stub 'User' }

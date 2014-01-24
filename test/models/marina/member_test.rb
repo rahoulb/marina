@@ -112,6 +112,27 @@ describe Marina::Member do
     end
   end
 
+  describe "custom fields" do
+    before do
+      subject.stubs(:field_definition_names).returns(field_definition_names)
+      subject.data = { 'this' => 'THIS', 'that' => 'THAT' }
+    end
+
+    it "can be read" do
+      subject.this.must_equal 'THIS'
+      subject.that.must_equal 'THAT'
+    end
+
+    it "can be written" do
+      subject.this = 'Hello'
+      subject.that = 'World'
+      subject.data['this'].must_equal 'Hello'
+      subject.data['that'].must_equal 'World'
+    end
+
+    let(:field_definition_names) { [:this, :that] }
+  end
+
   describe "API token" do
     it "is generated" do
       subject.generate_api_token
@@ -142,7 +163,7 @@ describe Marina::Member do
   end
 
   let(:member_class) do 
-    Class.new(Struct.new(:first_name, :last_name, :password, :password_confirmation, :encrypted_password, :subscriptions, :api_token, :permissions)) do
+    Class.new(Struct.new(:first_name, :last_name, :password, :password_confirmation, :encrypted_password, :subscriptions, :api_token, :permissions, :data)) do
       include Marina::Member
 
       class << self

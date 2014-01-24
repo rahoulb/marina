@@ -17,7 +17,10 @@ class Api::ProfilesController < ApplicationController
   end
 
   def member_params
-    params.require(:member).permit(:first_name, :last_name, :email, :username, :password, :password_confirmation, :title, :address, :town, :county, :postcode, :country, :telephone, :web_address)
+    keys = STANDARD_FIELDS + Marina::Db::FieldDefinition.names
+    params.require(:member).permit(keys)
   end
+
+  STANDARD_FIELDS = [:first_name, :last_name, :email, :username, :password, :password_confirmation, :title, :address, :town, :county, :postcode, :country, :telephone, :web_address, :biography]
 
 end

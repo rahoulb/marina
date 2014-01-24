@@ -29,6 +29,10 @@ class Marina::Db::Member < ActiveRecord::Base
     subscriptions.active.first
   end
 
+  def field_definition_names
+    Marina::Db::FieldDefinition.names
+  end
+
   class << self
     def by_username username
       where(username: username).first

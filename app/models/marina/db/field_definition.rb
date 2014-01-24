@@ -3,6 +3,12 @@ class Marina::Db::FieldDefinition < ActiveRecord::Base
 
   serialize :options, Array
 
+  class << self
+    def names
+      all.collect { | fd | fd.name.to_sym }
+    end
+  end
+
   class ShortText < Marina::Db::FieldDefinition
     def matches member, value
       text_field_match member, value
