@@ -20,8 +20,19 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
     then_my_registration_should_be_refused
   end
 
+  it "registers with an auto-approval code" do
+    when_i_register_with_an_auto_approval_code
+    then_no_application_should_be_created
+    when_my_payment_notification_is_received
+    then_i_should_become_an_approved_member
+    then_my_transaction_should_be_logged
+  end
+
   it "registers successfully with an affiliated membership and is approved"
   it "registers successfully and is approved but the affiliated membership is rejected" 
+
+  it "registers successfully with a voucher for free time"
+  it "registers successfully with a voucher for money off"
 
   it "registers but is rejected" do
     when_i_register
@@ -32,8 +43,9 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   end
 
   def given_a_payment_processor_and_mailing_list_processor
-    Rails.application.config.mailing_list_processor = mailing_list_processor
-    Rails.application.config.payment_processor = payment_processor
+    Marina::Application.config.mailing_list_processor = mailing_list_processor
+    Marina::Application.config.payment_processor = payment_processor
+    Marina::Application.config.auto_approval_code = 'FULLMEMBER'
   end
 
   def when_i_register
@@ -41,6 +53,13 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
     payment_processor.expects(:new_subscriber).with('email' => 'george@example.com', 'first_name' => 'George', 'last_name' => 'Testington', 'plan' => plan)
 
     post "/api/members", member: params, format: 'json'
+  end
+
+  def when_i_register_with_an_auto_approval_code
+    mailing_list_processor.expects(:new_subscriber).with('email' => 'george@example.com', 'first_name' => 'George', 'last_name' => 'Testington', 'plan_name' => 'Gold')
+    payment_processor.expects(:new_subscriber).with('email' => 'george@example.com', 'first_name' => 'George', 'last_name' => 'Testington', 'plan' => plan)
+
+    post "/api/members", member: params.merge(auto_approval_code: 'FULLMEMBER'), format: 'json'
   end
 
   def when_my_application_is_accepted
@@ -126,6 +145,26 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   
   def then_my_registration_should_be_refused
     response.status.must_equal 422
+  end
+
+  def then_no_application_should_be_created
+    response.status.must_equal 201
+
+    @member = Marina::Db::Member.by_username 'georgiou'
+    @member.wont_equal nil
+    @member.first_name.must_equal 'George'
+    @member.last_name.must_equal 'Testington'
+    @member.email.must_equal 'george@example.com'
+    @member.receives_mailshots.must_equal false
+    @member.current_subscription.must_equal nil
+    @member.source.must_equal 'SOMEWHERE'
+    @member.log_entries.first.kind_of?(Marina::Db::LogEntry::Registration).must_equal true
+
+    plan.reload
+    @application = plan.applications.first
+    @application.wont_equal nil
+    @application.member.must_equal @member
+    @application.status.must_equal 'approved'
   end
 
   let(:plan) { a_saved Marina::Db::Subscription::ReviewedPlan, name: 'Gold', feature_levels: ['GOLD'] }

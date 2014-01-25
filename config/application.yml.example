@@ -1,5 +1,7 @@
 development: 
   secret_key_base: 'some secret'
+  auto_approval_code: 'FULLMEMBER'
   
 test: 
   secret_key_base: 'some secret'
+  auto_approval_code: 'FULLMEMBER'

@@ -21,6 +21,6 @@ class Api::MembersController < ApplicationController
   end
 
   def member_params
-    params.require(:member).permit(:first_name, :last_name, :email, :username, :password, :password_confirmation, :agrees_to_terms, :receives_mailshots, :subscription_plan_id, :source, :supporting_information)
+    params.require(:member).permit(:first_name, :last_name, :email, :username, :password, :password_confirmation, :agrees_to_terms, :receives_mailshots, :subscription_plan_id, :source, :supporting_information, :auto_approval_code)
   end
 end

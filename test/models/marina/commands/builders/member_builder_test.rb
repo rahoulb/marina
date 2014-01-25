@@ -13,7 +13,7 @@ describe Marina::Commands::Builders::MemberBuilder do
     before do
       data_store.expects(:create!).returns(member)
       registration_store.expects(:create!).with(owner: member).returns(mock('Registration Log Entry'))
-      plan.stubs(:record_application_for).returns(nil)
+      plan.stubs(:new_application_from).returns(nil)
     end
 
     describe "without a subscription plan" do
@@ -87,7 +87,7 @@ describe Marina::Commands::Builders::MemberBuilder do
 
       before do
         plans_store.expects(:find).with(plan.id).returns(plan)
-        plan.expects(:record_application_for).with(member, supporting_information: 'Hello').returns(application)
+        plan.expects(:new_application_from).with(member, supporting_information: 'Hello').returns(application)
       end
 
       it "creates the member record" do

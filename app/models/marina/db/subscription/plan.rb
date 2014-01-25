@@ -13,7 +13,7 @@ class Marina::Db::Subscription::Plan < ActiveRecord::Base
     "#{id}-#{name.parameterize}"
   end
 
-  def record_application_for member, params = {}
+  def new_application_from member, params = {}
     # do nothing
   end
 
