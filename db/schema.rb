@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140124150704) do
+ActiveRecord::Schema.define(version: 20140125202654) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -28,6 +28,16 @@ ActiveRecord::Schema.define(version: 20140124150704) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "marina_db_affiliate_organisations", force: true do |t|
+    t.integer  "site_id"
+    t.string   "name",                                           default: "",    null: false
+    t.decimal  "discount",               precision: 8, scale: 2, default: 0.0,   null: false
+    t.boolean  "applies_to_memberships",                         default: false, null: false
+    t.boolean  "applies_to_tickets",                             default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "marina_db_asset_pages", force: true do |t|
     t.integer  "site_id"

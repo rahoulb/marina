@@ -21,6 +21,7 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   end
 
   it "registers with an auto-approval code" do
+    given_an_auto_approval_code_has_been_configured
     when_i_register_with_an_auto_approval_code
     then_no_application_should_be_created
     when_my_payment_notification_is_received
@@ -28,7 +29,18 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
     then_my_transaction_should_be_logged
   end
 
-  it "registers successfully with an affiliated membership and is approved"
+  it "registers successfully with an affiliated membership and is approved" do
+    given_some_affiliated_organisations
+    when_i_register_with_membership_of_an_affiliated_organisation
+    then_i_should_become_a_basic_member_with_an_application_for_the_approved_plan
+    when_my_affiliated_application_is_accepted
+    then_i_should_receive_a_discount
+    then_i_should_receive_an_email_with_payment_details
+    when_my_payment_notification_is_received
+    then_i_should_become_an_approved_member
+    then_my_transaction_should_be_logged
+  end
+
   it "registers successfully and is approved but the affiliated membership is rejected" 
 
   it "registers successfully with a voucher for free time"
@@ -45,7 +57,14 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   def given_a_payment_processor_and_mailing_list_processor
     Marina::Application.config.mailing_list_processor = mailing_list_processor
     Marina::Application.config.payment_processor = payment_processor
+  end
+
+  def given_an_auto_approval_code_has_been_configured
     Marina::Application.config.auto_approval_code = 'FULLMEMBER'
+  end
+
+  def given_some_affiliated_organisations
+    @affiliate_organisation = a_saved Marina::Db::AffiliateOrganisation, name: 'Affiliate', discount: 50.0, applies_to_memberships: true
   end
 
   def when_i_register
@@ -53,6 +72,13 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
     payment_processor.expects(:new_subscriber).with('email' => 'george@example.com', 'first_name' => 'George', 'last_name' => 'Testington', 'plan' => plan)
 
     post "/api/members", member: params, format: 'json'
+  end
+
+  def when_i_register_with_membership_of_an_affiliated_organisation
+    mailing_list_processor.expects(:new_subscriber).with('email' => 'george@example.com', 'first_name' => 'George', 'last_name' => 'Testington', 'plan_name' => 'Gold')
+    payment_processor.expects(:new_subscriber).with('email' => 'george@example.com', 'first_name' => 'George', 'last_name' => 'Testington', 'plan' => plan)
+
+    post "/api/members", member: params.merge(affiliate_organisation: 'Affiliate', affiliate_details: '123'), format: 'json'
   end
 
   def when_i_register_with_an_auto_approval_code
@@ -68,6 +94,11 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
     @application.reload
     @application.administrator.must_equal administrator
     @application.status.must_equal 'approved'
+  end
+
+  def when_my_affiliated_application_is_accepted
+    payment_processor.expects(:apply_credit_to).with(@member, 50.0)
+    when_my_application_is_accepted
   end
 
   def when_my_application_is_rejected 
@@ -107,6 +138,10 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   def then_my_transaction_should_be_logged
     @log_entry = @member.log_entries.first
     @log_entry.kind_of?(Marina::Db::LogEntry::Transaction).must_equal true
+  end
+
+  def then_i_should_receive_a_discount
+    # dealt with by the expects earlier
   end
 
   def then_i_should_become_a_basic_member_with_an_application_for_the_approved_plan

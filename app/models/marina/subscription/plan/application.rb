@@ -11,6 +11,7 @@ module Marina
           payments = params[:payment_processor]
           return if mails.nil? && payments.nil?
 
+          payments.apply_credit_to member, affiliate_organisation.discount unless affiliate_organisation.nil?
           mails.application_approved self, payments
         end
 

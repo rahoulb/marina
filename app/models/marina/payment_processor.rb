@@ -10,5 +10,9 @@ module Marina
     # params - :plan
     def url_for member, params = {}
     end
+
+    def apply_credit_to member, amount
+
+    end
   end
 end

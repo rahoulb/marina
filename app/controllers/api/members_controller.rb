@@ -16,11 +16,12 @@ class Api::MembersController < ApplicationController
       subscription_plans_store: Marina::Db::Subscription::Plan, 
       payment_processor: Rails.application.config.payment_processor, 
       mailing_list_processor: Rails.application.config.mailing_list_processor, 
-      registration_store: Marina::Db::LogEntry::Registration
+      registration_store: Marina::Db::LogEntry::Registration,
+      affiliate_organisation_store: Marina::Db::AffiliateOrganisation
     })
   end
 
   def member_params
-    params.require(:member).permit(:first_name, :last_name, :email, :username, :password, :password_confirmation, :agrees_to_terms, :receives_mailshots, :subscription_plan_id, :source, :supporting_information, :auto_approval_code)
+    params.require(:member).permit(:first_name, :last_name, :email, :username, :password, :password_confirmation, :agrees_to_terms, :receives_mailshots, :subscription_plan_id, :source, :supporting_information, :auto_approval_code, :affiliate_organisation, :affiliate_membership_details)
   end
 end

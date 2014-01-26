@@ -10,7 +10,7 @@ describe Marina::Subscription::ReviewedPlan do
   describe "when a new member applies" do
     describe "without an auto-approval code" do
       it "records the application" do
-        subject.applications.expects(:create!).with(member: member, supporting_information: 'Info', status: 'awaiting_review')
+        subject.applications.expects(:create!).with(member: member, supporting_information: 'Info', status: 'awaiting_review', affiliate_organisation: nil, affiliate_membership_details: nil)
 
         subject.new_application_from(member, supporting_information: 'Info')
       end
@@ -19,7 +19,7 @@ describe Marina::Subscription::ReviewedPlan do
     describe "with an auto-approval code" do
       describe "that is correct" do
         it "automatically approves the application" do
-          subject.applications.expects(:create!).with(member: member, supporting_information: 'Info', status: 'approved')
+          subject.applications.expects(:create!).with(member: member, supporting_information: 'Info', status: 'approved', affiliate_organisation: nil, affiliate_membership_details: nil)
 
           subject.new_application_from(member, supporting_information: 'Info', auto_approval_code: 'KEY')
         end
@@ -27,11 +27,22 @@ describe Marina::Subscription::ReviewedPlan do
 
       describe "that is incorrect" do
         it "does not approve the application" do
-          subject.applications.expects(:create!).with(member: member, supporting_information: 'Info', status: 'awaiting_review')
+          subject.applications.expects(:create!).with(member: member, supporting_information: 'Info', status: 'awaiting_review', affiliate_organisation: nil, affiliate_membership_details: nil)
 
           subject.new_application_from(member, supporting_information: 'Info', auto_approval_code: 'WRONGKEY')
         end
       end
+    end
+
+    describe "with an affiliated organisation" do
+      it "records the affiliation details" do
+        subject.applications.expects(:create!).with(member: member, supporting_information: 'Info', status: 'awaiting_review', affiliate_organisation: affiliate_organisation, affiliate_membership_details: '123')
+
+        subject.new_application_from(member, supporting_information: 'Info', affiliate_organisation: affiliate_organisation, affiliate_membership_details: '123')
+
+      end
+
+      let(:affiliate_organisation) { stub 'Affiliate Organisation' }
     end
   end
 
