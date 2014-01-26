@@ -4,3 +4,6 @@ when_creating_a Marina::Db::Member, set: { first_name: 'Member', receives_mailsh
 when_creating_a Marina::Db::Subscription, generate: { plan: -> { a_saved(Marina::Db::Subscription::BasicPlan) }, member: -> { a_saved(Marina::Db::Member) } }, set: { active: true, expires_on: 10.days.from_now }
 when_creating_a Marina::Db::FieldDefinition, auto_generate: [:name, :label], set: { kind: 'short_text' }
 when_creating_a Marina::Db::AffiliateOrganisation, auto_generate: [:name], set: { discount: 10.0, applies_to_memberships: true, applies_to_tickets: true }
+when_creating_a Marina::Db::Voucher, auto_generate: [:code]
+when_creating_a Marina::Db::Voucher::FreeTime, auto_generate: [:code], set: { days: 10 }
+when_creating_a Marina::Db::Voucher::Credit, auto_generate: [:code], set: { amount: 10.0 }

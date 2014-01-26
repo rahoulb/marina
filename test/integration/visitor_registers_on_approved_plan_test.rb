@@ -23,7 +23,7 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   it "registers with an auto-approval code" do
     given_an_auto_approval_code_has_been_configured
     when_i_register_with_an_auto_approval_code
-    then_no_application_should_be_created
+    then_the_application_should_be_auto_approved
     when_my_payment_notification_is_received
     then_i_should_become_an_approved_member
     then_my_transaction_should_be_logged
@@ -52,7 +52,15 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
     then_my_transaction_should_be_logged
   end
 
-  it "registers successfully with a voucher for free time"
+  it "registers successfully with a voucher for free time" do
+    given_a_voucher_for_free_time
+    when_i_register_with_a_free_time_voucher_code
+    then_the_application_should_be_auto_approved
+    then_i_should_have_a_number_of_free_days
+    then_i_should_become_an_approved_member
+    then_my_transaction_should_be_logged
+  end
+
   it "registers successfully with a voucher for money off"
 
   it "registers but is rejected" do
@@ -75,6 +83,10 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   def given_some_affiliated_organisations
     @affiliate_organisation = a_saved Marina::Db::AffiliateOrganisation, name: 'Affiliate', discount: 50.0, applies_to_memberships: true
   end
+  
+  def given_a_voucher_for_free_time
+    @voucher = a_saved Marina::Db::Voucher::FreeTime, code: 'FREESTUFF', days: 10
+  end
 
   def when_i_register
     mailing_list_processor.expects(:new_subscriber).with('email' => 'george@example.com', 'first_name' => 'George', 'last_name' => 'Testington', 'plan_name' => 'Gold')
@@ -96,6 +108,15 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
 
     post "/api/members", member: params.merge(auto_approval_code: 'FULLMEMBER'), format: 'json'
   end
+
+  def when_i_register_with_a_free_time_voucher_code
+    mailing_list_processor.expects(:new_subscriber).with('email' => 'george@example.com', 'first_name' => 'George', 'last_name' => 'Testington', 'plan_name' => 'Gold')
+    payment_processor.expects(:new_subscriber).with('email' => 'george@example.com', 'first_name' => 'George', 'last_name' => 'Testington', 'plan' => plan)
+    payment_processor.expects(:add_time_to)
+
+    post "/api/members", member: params.merge(voucher_code: 'FREESTUFF'), format: 'json'
+  end
+
 
   def when_my_application_is_accepted
     mailing_list_processor.expects(:application_approved).with(@application, payment_processor)
@@ -158,7 +179,17 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   end
 
   def then_i_should_receive_a_discount
-    # dealt with by the expects earlier
+    # dealt with by the expects on the payment processor
+  end
+
+  def then_i_should_have_a_number_of_free_days
+    post '/api/pin_payment_notifications', subscriber_ids: [@member.id]
+    response.status.must_equal 200
+
+    payment_processor.expects(:get_subscriber_details).with(@member.id.to_s).returns(subscriber_details)
+    Delayed::Worker.new.work_off
+
+    @member.reload
   end
 
   def then_i_should_become_a_basic_member_with_an_application_for_the_approved_plan
@@ -199,7 +230,7 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
     response.status.must_equal 422
   end
 
-  def then_no_application_should_be_created
+  def then_the_application_should_be_auto_approved
     response.status.must_equal 201
 
     @member = Marina::Db::Member.by_username 'georgiou'
@@ -224,5 +255,5 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   let(:payment_processor) { stub 'Payment processor' }
   let(:params) { { first_name: 'George', last_name: 'Testington', email: 'george@example.com', username: 'georgiou', password: 'secret101', password_confirmation: 'secret101', agrees_to_terms: true, receives_mailshots: false, subscription_plan_id: plan.id, source: 'SOMEWHERE', supporting_information: 'I am great' } }
   let(:administrator) { a_saved Marina::Db::Member }
-  let(:subscriber_details) { stub active: true, active_until: (Date.today + 365), feature_level: 'GOLD', lifetime_subscription: false, credit: 0.0, identifier: 'George-Testington' }
+  let(:subscriber_details) { stub active: true, active_until: (Date.today + 10), feature_level: 'GOLD', lifetime_subscription: false, credit: 0.0, identifier: 'George-Testington' }
 end

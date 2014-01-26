@@ -14,5 +14,9 @@ module Marina
     def apply_credit_to member, amount
 
     end
+
+    def add_time_to member, days
+
+    end
   end
 end
