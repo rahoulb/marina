@@ -61,7 +61,17 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
     then_my_transaction_should_be_logged
   end
 
-  it "registers successfully with a voucher for money off"
+  it "registers successfully with a voucher for money off" do
+    given_a_voucher_for_money_off
+    when_i_register_with_a_money_off_voucher_code
+    then_i_should_become_a_basic_member_with_an_application_for_the_approved_plan
+    when_my_application_is_accepted
+    then_i_should_receive_an_email_with_payment_details
+    when_my_payment_notification_is_received
+    then_i_should_become_an_approved_member
+    then_my_transaction_should_be_logged
+
+  end
 
   it "registers but is rejected" do
     when_i_register
@@ -86,6 +96,10 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   
   def given_a_voucher_for_free_time
     @voucher = a_saved Marina::Db::Voucher::FreeTime, code: 'FREESTUFF', days: 10
+  end
+
+  def given_a_voucher_for_money_off
+    @voucher = a_saved Marina::Db::Voucher::Credit, code: 'FREESTUFF', amount: 10.0
   end
 
   def when_i_register
@@ -117,6 +131,13 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
     post "/api/members", member: params.merge(voucher_code: 'FREESTUFF'), format: 'json'
   end
 
+  def when_i_register_with_a_money_off_voucher_code
+    mailing_list_processor.expects(:new_subscriber).with('email' => 'george@example.com', 'first_name' => 'George', 'last_name' => 'Testington', 'plan_name' => 'Gold')
+    payment_processor.expects(:new_subscriber).with('email' => 'george@example.com', 'first_name' => 'George', 'last_name' => 'Testington', 'plan' => plan)
+    payment_processor.expects(:apply_credit_to)
+
+    post "/api/members", member: params.merge(voucher_code: 'FREESTUFF'), format: 'json'
+  end
 
   def when_my_application_is_accepted
     mailing_list_processor.expects(:application_approved).with(@application, payment_processor)

@@ -1,5 +1,5 @@
 class Marina::Db::Voucher < ActiveRecord::Base
-  def apply_to member, application, payment_processor
+  def apply_to member_or_application, payment_processor
     raise "Subclass to implement"
   end
 
