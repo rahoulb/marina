@@ -8,7 +8,7 @@ describe Marina::Subscription::Plan::Application do
 
   describe "being accepted" do
     it "records the administrator and updates the status" do
-      subject.expects(:update_attributes!).with(administrator: administrator, status: 'approved')
+      subject.expects(:update_attributes!).with(administrator: administrator, status: 'approved', reason_for_affiliation_rejection: nil)
       subject.accepted_by administrator
     end
 
@@ -25,10 +25,24 @@ describe Marina::Subscription::Plan::Application do
         mail_processor.stubs(:application_approved)
       end
 
-      it "applies a credit to the members account" do
-        payment_processor.expects(:apply_credit_to).with(member, 25.0)
+      describe "and the affiliate details are accepted" do
 
-        subject.accepted_by administrator, mail_processor: mail_processor, payment_processor: payment_processor
+        it "applies a credit to the members account" do
+          payment_processor.expects(:apply_credit_to).with(member, 25.0)
+
+          subject.accepted_by administrator, mail_processor: mail_processor, payment_processor: payment_processor
+        end
+      end
+
+      describe "and the affiliate details are rejected" do
+        it "does not apply a credit to the members account" do
+          subject.accepted_by administrator, mail_processor: mail_processor, payment_processor: payment_processor, reason_for_affiliation_rejection: 'Wrong'
+        end
+
+        it "stores the reason for rejection" do
+          subject.expects(:update_attributes!).with(administrator: administrator, status: 'approved', reason_for_affiliation_rejection: 'Wrong')
+          subject.accepted_by administrator, mail_processor: mail_processor, payment_processor: payment_processor, reason_for_affiliation_rejection: 'Wrong'
+        end
       end
     end
   end

@@ -41,7 +41,16 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
     then_my_transaction_should_be_logged
   end
 
-  it "registers successfully and is approved but the affiliated membership is rejected" 
+  it "registers successfully and is approved but the affiliated membership is rejected" do
+    given_some_affiliated_organisations
+    when_i_register_with_membership_of_an_affiliated_organisation
+    then_i_should_become_a_basic_member_with_an_application_for_the_approved_plan
+    when_my_application_is_accepted_but_the_affiliation_rejected
+    then_i_should_receive_an_email_with_payment_details
+    when_my_payment_notification_is_received
+    then_i_should_become_an_approved_member
+    then_my_transaction_should_be_logged
+  end
 
   it "registers successfully with a voucher for free time"
   it "registers successfully with a voucher for money off"
@@ -99,6 +108,14 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
   def when_my_affiliated_application_is_accepted
     payment_processor.expects(:apply_credit_to).with(@member, 50.0)
     when_my_application_is_accepted
+  end
+
+  def when_my_application_is_accepted_but_the_affiliation_rejected
+    mailing_list_processor.expects(:application_approved).with(@application, payment_processor)
+    @application.accepted_by administrator, mail_processor: mailing_list_processor, payment_processor: payment_processor, reason_for_affiliation_rejection: 'Wrong'
+    @application.reload
+    @application.administrator.must_equal administrator
+    @application.status.must_equal 'approved'
   end
 
   def when_my_application_is_rejected 
