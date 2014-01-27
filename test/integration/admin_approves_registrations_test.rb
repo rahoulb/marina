@@ -9,14 +9,21 @@ describe "AdminApprovesRegistrations Integration Test" do
       when_i_view_the_applications
       then_i_should_see_the_application_details
     end
-    it "marks an application as accepted"
+
+    it "marks an application as accepted" do
+      given_some_outstanding_membership_applications
+      given_a_payment_processor_and_mailing_list_processor
+      when_i_accept_an_application
+      then_the_application_should_be_approved
+      then_the_member_should_receive_an_email_with_payment_details
+    end
     it "marks an application as accepted but rejects the affiliations"
     it "marks an application as rejected" 
 
     let(:admin) { a_saved Marina::Db::Member, permissions: ['approve_membership_applications'] }
     let(:member) { a_saved Marina::Db::Member }
     let(:plan) { a_saved Marina::Db::Subscription::ReviewedPlan }
-    let(:affiliate) { a_saved Marina::Db::AffiliateOrganisation }
+    let(:affiliate) { a_saved Marina::Db::AffiliateOrganisation, discount: 25.0 }
     let(:application) { a_saved Marina::Db::Subscription::ReviewedPlan::Application, member: member, plan: plan, supporting_information: 'I belong', status: 'awaiting_review', affiliate_organisation: affiliate, affiliate_membership_details: '123' }
     let(:approved_application) { a_saved Marina::Db::Subscription::ReviewedPlan::Application, status: 'approved' }
     let(:rejected_application) { a_saved Marina::Db::Subscription::ReviewedPlan::Application, status: 'rejected' }
@@ -27,8 +34,28 @@ describe "AdminApprovesRegistrations Integration Test" do
       rejected_application.touch
     end
 
+    def given_a_payment_processor_and_mailing_list_processor
+      Marina::Application.config.mailing_list_processor = mailing_list_processor
+      Marina::Application.config.payment_processor = payment_processor
+    end
+
     def when_i_view_the_applications
       get "/api/membership_applications", format: 'json'
+    end
+
+    def when_i_accept_an_application
+      mailing_list_processor.expects(:application_approved).with(application, payment_processor)
+      payment_processor.expects(:apply_credit_to).with(member, 25.0)
+      post "/api/membership_applications/#{application.id}/accept", application: { some: 'data' }, format: 'json'
+    end
+
+    def then_the_application_should_be_approved
+      application.reload
+      application.status.must_equal 'approved'
+    end
+
+    def then_the_member_should_receive_an_email_with_payment_details
+      # handled by the earlier expects
     end
 
     def then_i_should_see_the_application_details
@@ -78,4 +105,7 @@ describe "AdminApprovesRegistrations Integration Test" do
       response.status.must_equal 401
     end
   end
+
+  let(:mailing_list_processor) { stub 'Mailing list processor' }
+  let(:payment_processor) { stub 'Payment processor' }
 end

@@ -8,14 +8,14 @@ class Api::MembershipApplicationsController < ApplicationController
   end
 
   def accept
-    updater.update id, acceptance_params do | updated |
-      render partial: '/api/membership_applications/membership_application', locals: { application: updated }
+    updater.accept id, acceptance_params do | updated |
+      render partial: '/api/membership_applications/application', locals: { application: updated }
     end
   end
 
   def reject
-    updater.update id, rejection_params do | updated |
-      render partial: '/api/membership_applications/membership_application', locals: { application: updated }
+    updater.reject id, rejection_params do | updated |
+      render partial: '/api/membership_applications/application', locals: { application: updated }
     end
   end
 
@@ -26,7 +26,7 @@ class Api::MembershipApplicationsController < ApplicationController
   end
 
   def updater
-    ::Marina::Commands::Builders::MembershipApplicationUpdater.new user: current_user, data_store: Marina::Db::Subscription::ReviewedPlan::Application
+    ::Marina::Commands::Builders::MembershipApplicationUpdater.new user: current_user, data_store: Marina::Db::Subscription::ReviewedPlan::Application, mail_processor: Marina::Application.config.mailing_list_processor, payment_processor: Marina::Application.config.payment_processor
   end
 
   def id
