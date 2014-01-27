@@ -18,6 +18,12 @@ Marina::Application.routes.draw do
     resource :profile
     resources :mailouts
     resources :subscription_plans
+    resources :membership_applications do
+      member do
+        post :accept
+        post :reject
+      end
+    end
     resources :members
     resources :field_definitions
     resources :pin_payment_notifications, only: [:create]

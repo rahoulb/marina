@@ -7,3 +7,4 @@ when_creating_a Marina::Db::AffiliateOrganisation, auto_generate: [:name], set: 
 when_creating_a Marina::Db::Voucher, auto_generate: [:code]
 when_creating_a Marina::Db::Voucher::FreeTime, auto_generate: [:code], set: { days: 10 }
 when_creating_a Marina::Db::Voucher::Credit, auto_generate: [:code], set: { amount: 10.0 }
+when_creating_a Marina::Db::Subscription::ReviewedPlan::Application, set: { status: 'awaiting_review' }, generate: { member: -> { a_saved Marina::Db::Member }, plan: -> { a_saved Marina::Db::Subscription::ReviewedPlan } }

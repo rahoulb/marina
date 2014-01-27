@@ -8,4 +8,6 @@ class Marina::Db::Subscription::ReviewedPlan::Application < ActiveRecord::Base
   belongs_to :administrator, class_name: 'Marina::Db::Member', foreign_key: 'administrator_id'
   belongs_to :affiliate_organisation, class_name: 'Marina::Db::AffiliateOrganisation', foreign_key: 'affiliated_organisation_id'
 
+  scope :outstanding, -> { where(status: 'awaiting_review') }
+
 end
