@@ -57,6 +57,11 @@ module Marina
       self.update_attribute :last_login_at, Time.now
     end
 
+    def update_directory_listing
+      value = (current_subscription.nil? ? false : current_subscription.has_directory_listing)
+      self.update_attribute :has_directory_listing, value unless self.has_directory_listing == value
+    end
+
     def method_missing meffod, *args, &block
       super
     rescue NoMethodError => nme

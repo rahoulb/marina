@@ -22,6 +22,7 @@ class Marina::Db::Member < ActiveRecord::Base
 
   before_save :encrypt_password
   before_create :generate_api_token
+  after_save :update_directory_listing
 
   serialize :permissions, Array
   serialize :data, Hash

@@ -55,6 +55,9 @@ describe "PaidMemberRegistration Integration Test" do
       @subscription.lifetime_subscription.must_equal subscriber_details.lifetime_subscription
       @subscription.credit.must_equal subscriber_details.credit
       @subscription.identifier.must_equal subscriber_details.identifier
+
+      @member.reload
+      @member.has_directory_listing.must_equal true
     end
 
     def verify_transaction_logged
@@ -75,7 +78,7 @@ describe "PaidMemberRegistration Integration Test" do
     end
   end
 
-  let(:plan) { a_saved Marina::Db::Subscription::PaidPlan, name: 'Premium', feature_levels: ['PREMIUM'] }
+  let(:plan) { a_saved Marina::Db::Subscription::PaidPlan, name: 'Premium', feature_levels: ['PREMIUM'], has_directory_listing: true }
   let(:params) { { first_name: 'George', last_name: 'Testington', email: 'george@example.com', username: 'georgiou', password: 'secret101', password_confirmation: 'secret101', agrees_to_terms: true, receives_mailshots: false, subscription_plan_id: plan.id } }
 
 end

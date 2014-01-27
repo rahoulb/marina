@@ -5,4 +5,13 @@ class Marina::Db::Subscription < ActiveRecord::Base
   scope :active, -> { where(active: true).order(:expires_on) }
 
   delegate :name, to: :plan
+  delegate :has_directory_listing, to: :plan
+
+  after_save :update_directory_listing
+
+  protected
+
+  def update_directory_listing
+    member.update_directory_listing unless member.nil?
+  end
 end

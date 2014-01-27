@@ -18,6 +18,26 @@ describe Marina::Member do
       it "reports the subscription plan name" do
         subject.subscription_plan.must_equal subscription.name
       end
+
+      describe "that has a directory listing" do
+        before { subscription.stubs(:has_directory_listing).returns(true) }
+
+        it "adds a directory listing" do
+          subject.expects(:update_attribute).with(:has_directory_listing, true)
+
+          subject.update_directory_listing
+        end
+      end
+
+      describe "that does not have a directory listing" do
+        before { subscription.stubs(:has_directory_listing).returns(false) }
+
+        it "adds a directory listing" do
+          subject.expects(:update_attribute).with(:has_directory_listing, false)
+
+          subject.update_directory_listing
+        end
+      end
     end
 
     describe "when the member has an inactive subscription" do
@@ -36,6 +56,12 @@ describe Marina::Member do
         subscriptions.expects(:build).returns(:new_subscription)
 
         subject.build_subscription
+      end
+
+      it "does not have a directory listing" do
+        subject.expects(:update_attribute).with(:has_directory_listing, false)
+
+        subject.update_directory_listing
       end
     end
 
@@ -163,7 +189,7 @@ describe Marina::Member do
   end
 
   let(:member_class) do 
-    Class.new(Struct.new(:first_name, :last_name, :password, :password_confirmation, :encrypted_password, :subscriptions, :api_token, :permissions, :data)) do
+    Class.new(Struct.new(:first_name, :last_name, :password, :password_confirmation, :encrypted_password, :subscriptions, :api_token, :permissions, :data, :has_directory_listing)) do
       include Marina::Member
 
       class << self
