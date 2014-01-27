@@ -62,6 +62,10 @@ module Marina
       self.update_attribute :has_directory_listing, value unless self.has_directory_listing == value
     end
 
+    def first_renewal
+      subscriptions.count < 2
+    end
+
     def method_missing meffod, *args, &block
       super
     rescue NoMethodError => nme

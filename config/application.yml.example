@@ -1,7 +1,9 @@
 development: 
   secret_key_base: 'some secret'
   auto_approval_code: 'FULLMEMBER'
-  
+  admin_username: 'admin-user'
+
 test: 
   secret_key_base: 'some secret'
   auto_approval_code: 'FULLMEMBER'
+  admin_username: 'admin-user'

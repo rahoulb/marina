@@ -44,6 +44,25 @@ class Marina::Db::Member < ActiveRecord::Base
     def encryption_strategy
       SHA256Encryptor.new
     end
+
+    def renewal_due_in_two_weeks
+      find_members_with_renewals_due_on(Date.today + 14)
+    end
+
+    def renewal_due_in_four_weeks
+      find_members_with_renewals_due_on(Date.today + 28)
+    end
+
+    protected
+
+    def find_members_with_renewals_due_on date
+      results = []
+      find_each do | member |
+        results << member if !member.current_subscription.nil? && member.current_subscription.expires_on.to_date == date
+      end
+      return results
+    end
+
   end
 
   class SHA256Encryptor

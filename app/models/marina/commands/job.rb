@@ -16,6 +16,7 @@ module Marina
 
       def perform
         log "About to execute #{self.class.name}..."
+        check_security!
         result = execute
         log "...#{self.class.name} completed with #{result.inspect}"
         return result

@@ -5,10 +5,16 @@ require_relative '../../../../../app/models/marina/commands/jobs/mailout_sender'
 describe Marina::Commands::Jobs::MailoutSender do
   subject { Marina::Commands::Jobs::MailoutSender.new user: user, mailout_id: 456 }
 
+  it "requires the send_mailouts permission" do
+    subject.permission.must_equal :send_mailouts
+  end
+
   before do
     subject.stubs(:mailout).returns(mailout)
     subject.stubs(:recipient_fetcher).returns(recipient_fetcher)
     subject.stubs(:queue).returns(queue)
+    subject.stubs(:user).returns(user)
+    user.stubs(:can).with(:send_mailouts).returns(true)
   end
 
   it "schedules an individual mail delivery for all members" do

@@ -16,5 +16,21 @@ module Marina
 
     end
 
+    def initial_two_week_renewal_notification member
+
+    end
+
+    def two_week_renewal_notification member
+
+    end
+
+    def initial_four_week_renewal_notification member
+
+    end
+
+    def four_week_renewal_notification member
+
+    end
+
   end
 end

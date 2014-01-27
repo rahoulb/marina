@@ -8,6 +8,21 @@ describe Marina::Member do
   subject { member_class.new }
 
   describe "subscriptions" do
+    describe "at renewal time" do
+      it "reports if this is the first renewal" do
+        subject.stubs(:subscriptions).returns([first_subscription])
+        subject.first_renewal.must_equal true
+      end
+
+      it "reports if this is not the first renewal" do
+        subject.stubs(:subscriptions).returns([first_subscription, second_subscription])
+        subject.first_renewal.wont_equal true
+      end
+
+      let(:first_subscription) { stub 'Subscription' }
+      let(:second_subscription) { stub 'Subscription' }
+    end
+
     describe "when the member has an active subscription" do
       before { subject.stubs(:current_subscription).returns(subscription) }
 
