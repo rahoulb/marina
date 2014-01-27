@@ -27,7 +27,13 @@ describe "AdminApprovesRegistrations Integration Test" do
       then_the_member_should_receive_an_email_with_payment_details
     end
 
-    it "marks an application as rejected" 
+    it "marks an application as rejected" do
+      given_some_outstanding_membership_applications
+      given_a_payment_processor_and_mailing_list_processor
+      when_i_reject_an_application
+      then_the_application_should_be_rejected
+      then_the_member_should_receive_an_email_detailing_the_rejection
+    end
 
     let(:admin) { a_saved Marina::Db::Member, permissions: ['approve_membership_applications'] }
     let(:member) { a_saved Marina::Db::Member }
@@ -58,6 +64,11 @@ describe "AdminApprovesRegistrations Integration Test" do
       post "/api/membership_applications/#{application.id}/accept", application: { some: 'data' }, format: 'json'
     end
 
+    def when_i_reject_an_application
+      mailing_list_processor.expects(:application_rejected).with(application)
+      post "/api/membership_applications/#{application.id}/reject", application: { reason_for_rejection: 'Idiot' }, format: 'json'
+    end
+
     def when_i_accept_an_application_but_reject_the_affiliation
       mailing_list_processor.expects(:application_approved).with(application, payment_processor)
       post "/api/membership_applications/#{application.id}/accept", application: { reason_for_affiliation_rejection: 'No way'}, format: 'json'
@@ -68,12 +79,21 @@ describe "AdminApprovesRegistrations Integration Test" do
       application.status.must_equal 'approved'
     end
 
+    def then_the_application_should_be_rejected
+      application.reload
+      application.status.must_equal 'rejected'
+    end
+
     def then_the_member_should_receive_an_email_with_payment_details
       # handled by the earlier expects on the mailing processor
     end
 
     def then_there_should_be_no_discount_applied
       # handled by the lack of an expects call on the payment processor
+    end
+
+    def then_the_member_should_receive_an_email_detailing_the_rejection
+      # handled by the earlier expects on the mailing processor
     end
 
     def then_i_should_see_the_application_details
