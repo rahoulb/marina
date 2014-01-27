@@ -12,7 +12,7 @@ class Api::MembersDirectory::LatestMembersController < ApplicationController
   def latest_members_finder
     Marina::Commands::Fetchers::LatestMembersFetcher.new({
       user: current_user,
-      data_store: Marina::Db::Member
+      data_store: Marina::Db::Member.with_directory_listing
     })
   end
 end

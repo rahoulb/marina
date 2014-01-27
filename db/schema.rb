@@ -108,7 +108,8 @@ ActiveRecord::Schema.define(version: 20140126173227) do
     t.string   "email"
     t.string   "encrypted_password"
     t.string   "api_token"
-    t.boolean  "receives_mailshots", default: false, null: false
+    t.boolean  "receives_mailshots",    default: false, null: false
+    t.boolean  "has_directory_listing", default: false, null: false
     t.string   "visible_to"
     t.text     "visible_plans"
     t.text     "permissions"
@@ -137,13 +138,15 @@ ActiveRecord::Schema.define(version: 20140126173227) do
   create_table "marina_db_subscription_plans", force: true do |t|
     t.integer  "site_id"
     t.string   "type"
-    t.string   "name",                                                                       null: false
+    t.string   "name",                                                                        null: false
     t.decimal  "price",                              precision: 10, scale: 2
     t.integer  "length"
     t.string   "supporting_information_label"
     t.text     "supporting_information_description"
     t.text     "feature_levels"
-    t.boolean  "active",                                                      default: true, null: false
+    t.boolean  "has_season_ticket",                                           default: false, null: false
+    t.boolean  "has_directory_listing",                                       default: false, null: false
+    t.boolean  "active",                                                      default: true,  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

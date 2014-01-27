@@ -59,11 +59,11 @@ describe "AdminSearchesMembersDirectory Integration Test" do
   def setup_members
     @do_not_find = []
     ['Brown', 'Smith', 'Jones'].each do | last_name |
-      @do_not_find << a_saved(Marina::Db::Member, visible_to: 'none', last_name: last_name)
+      @do_not_find << a_saved(Marina::Db::Member, visible_to: 'none', last_name: last_name, has_directory_listing: true)
     end
-    @brown = a_saved Marina::Db::Member, visible_to: 'none', last_name: 'Brown'
-    @smith = a_saved Marina::Db::Member, visible_to: 'none', last_name: 'Smith'
-    @jones = a_saved Marina::Db::Member, visible_to: 'none', last_name: 'Jones'
+    @brown = a_saved Marina::Db::Member, visible_to: 'none', last_name: 'Brown', has_directory_listing: true
+    @smith = a_saved Marina::Db::Member, visible_to: 'none', last_name: 'Smith', has_directory_listing: true
+    @jones = a_saved Marina::Db::Member, visible_to: 'none', last_name: 'Jones', has_directory_listing: true
   end
 
   def setup_members_with_multi_select_fields

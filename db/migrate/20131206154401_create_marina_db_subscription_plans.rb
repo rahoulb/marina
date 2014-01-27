@@ -9,6 +9,7 @@ class CreateMarinaDbSubscriptionPlans < ActiveRecord::Migration
       t.string :supporting_information_label
       t.text :supporting_information_description
       t.text :feature_levels
+      t.boolean :has_season_ticket, :has_directory_listing, default: false, null: false
       t.boolean :active, default: true, null: false
       t.timestamps
     end

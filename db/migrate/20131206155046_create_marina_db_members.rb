@@ -6,6 +6,7 @@ class CreateMarinaDbMembers < ActiveRecord::Migration
       t.string :encrypted_password, length: 256
       t.string :api_token, length: 64
       t.boolean :receives_mailshots, default: false, null: false
+      t.boolean :has_directory_listing, default: false, null: false
       t.string :visible_to
       t.text :visible_plans, :permissions, :data
 

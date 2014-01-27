@@ -110,11 +110,10 @@ describe Marina::Commands::Fetchers::MembersSearcher do
     before do
       user.stubs(:can).with(:access_all_members).returns(true)
       user.stubs(:current_subscription_plan).returns(nil)
-      data_store.expects(:all).returns(members)
     end
 
     it "finds members by their last_name" do
-      members.expects(:by_last_name).with('Patel').returns(members)
+      data_store.expects(:by_last_name).with('Patel').returns(members)
 
       results = nil
       subject.fetch last_name: 'Patel' do | found |
@@ -124,6 +123,8 @@ describe Marina::Commands::Fetchers::MembersSearcher do
     end
 
     it "finds members by multi-select fields" do
+      subject.stubs(:data_store).returns(members) # quick hack to return an array
+
       first_field.expects(:matches).with(first_member, 'this, that').returns(true)
       second_field.expects(:matches).with(first_member, 'whatever').returns(true)
 

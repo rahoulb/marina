@@ -63,8 +63,9 @@ describe "MemberSearchesMembersDirectory Integration Test" do
 
   def setup_members
     @do_not_find = []
-    @do_not_find << a_saved(Marina::Db::Member, visible_to: 'none', last_name: 'Hidden')
-    @do_not_find << a_saved(Marina::Db::Member, visible_to: 'some', visible_plans: [premium_plan.id])
+    @do_not_find << a_saved(Marina::Db::Member, visible_to: 'none', last_name: 'Hidden', has_directory_listing: true)
+    @do_not_find << a_saved(Marina::Db::Member, visible_to: 'some', visible_plans: [premium_plan.id], has_directory_listing: true)
+    @do_not_find << a_saved(Marina::Db::Member, visible_to: 'all', has_directory_listing: false)
 
     @brown = a_saved Marina::Db::Member, visible_to: 'some', visible_plans: [standard_plan.id, premium_plan.id], last_name: 'Brown'
     @smith = a_saved Marina::Db::Member, visible_to: 'some', visible_plans: [standard_plan.id], last_name: 'Smith'

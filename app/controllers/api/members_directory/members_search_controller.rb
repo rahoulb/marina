@@ -12,7 +12,7 @@ class Api::MembersDirectory::MembersSearchController < ApplicationController
   def members_searcher
     Marina::Commands::Fetchers::MembersSearcher.new({
       user: current_user,
-      data_store: Marina::Db::Member, 
+      data_store: Marina::Db::Member.with_directory_listing, 
       field_definitions: Marina::Db::FieldDefinition.all
     })
   end

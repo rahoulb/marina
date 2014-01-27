@@ -32,7 +32,7 @@ module Marina
         end
 
         def all_member_fetcher
-          data_store.all
+          data_store
         end
 
         def privacy_fetcher

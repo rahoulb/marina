@@ -12,6 +12,7 @@ class Marina::Db::Member < ActiveRecord::Base
   has_many :log_entries, -> { order('created_at desc') }, class_name: 'Marina::Db::LogEntry', as: :owner, dependent: :destroy
   has_many :plan_applications, class_name: 'Marina::Db::Subscription::ReviewedPlan::Application', foreign_key: 'member_id', dependent: :destroy
 
+  scope :with_directory_listing, -> { where(has_directory_listing: true) }
   scope :mailshot_receivers, -> { where(receives_mailshots: true) }
   scope :visible_to_all, -> { where(visible_to: 'all') }
   scope :visible_to_members, -> { where('visible_to = ? or visible_to = ?', 'all', 'some') }
