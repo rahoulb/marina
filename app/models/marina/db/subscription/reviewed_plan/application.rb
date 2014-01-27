@@ -10,4 +10,7 @@ class Marina::Db::Subscription::ReviewedPlan::Application < ActiveRecord::Base
 
   scope :outstanding, -> { where(status: 'awaiting_review') }
 
+  validates :plan, presence: true
+  validates :member, presence: true
+
 end

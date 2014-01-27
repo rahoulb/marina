@@ -7,6 +7,12 @@ class Api::MembershipApplicationsController < ApplicationController
     end
   end
 
+  def create
+    builder.build_from application_params do | created |
+      render partial: '/api/membership_applications/application', locals: { application: created }, status: 201
+    end
+  end
+
   def accept
     updater.accept id, acceptance_params do | updated |
       render partial: '/api/membership_applications/application', locals: { application: updated }
@@ -29,6 +35,10 @@ class Api::MembershipApplicationsController < ApplicationController
     ::Marina::Commands::Builders::MembershipApplicationUpdater.new user: current_user, data_store: Marina::Db::Subscription::ReviewedPlan::Application, mail_processor: Marina::Application.config.mailing_list_processor, payment_processor: Marina::Application.config.payment_processor
   end
 
+  def builder
+    ::Marina::Commands::Builders::MembershipApplicationBuilder.new user: current_user, data_store: current_user.plan_applications
+  end
+
   def id
     params[:id]
   end
@@ -39,5 +49,9 @@ class Api::MembershipApplicationsController < ApplicationController
 
   def rejection_params
     params.require(:application).permit(:reason_for_rejection)
+  end
+
+  def application_params
+    params.require(:application).permit(:plan_id, :supporting_information)
   end
 end

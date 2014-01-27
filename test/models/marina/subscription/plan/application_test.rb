@@ -66,7 +66,7 @@ describe Marina::Subscription::Plan::Application do
   let(:affiliate_organisation) { stub 'Affiliate Organisation', discount: 25.0 }
   let(:member) { stub 'Member' }
   let(:application_class) do
-    Class.new(Struct.new(:member, :administrator, :status, :affiliate_organisation, :affiliate_membership_details)) do
+    Class.new(Struct.new(:member, :administrator, :status, :affiliate_organisation, :affiliate_membership_details, :errors)) do
       include Marina::Subscription::Plan::Application
     end
   end
