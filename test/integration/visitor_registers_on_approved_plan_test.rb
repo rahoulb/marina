@@ -141,7 +141,7 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
 
   def when_my_application_is_accepted
     mailing_list_processor.expects(:application_approved).with(@application, payment_processor)
-    @application.accepted_by administrator, mail_processor: mailing_list_processor, payment_processor: payment_processor
+    @application.accepted_by administrator, mailing_list_processor: mailing_list_processor, payment_processor: payment_processor
     @application.reload
     @application.administrator.must_equal administrator
     @application.status.must_equal 'approved'
@@ -154,7 +154,7 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
 
   def when_my_application_is_accepted_but_the_affiliation_rejected
     mailing_list_processor.expects(:application_approved).with(@application, payment_processor)
-    @application.accepted_by administrator, mail_processor: mailing_list_processor, payment_processor: payment_processor, reason_for_affiliation_rejection: 'Wrong'
+    @application.accepted_by administrator, mailing_list_processor: mailing_list_processor, payment_processor: payment_processor, reason_for_affiliation_rejection: 'Wrong'
     @application.reload
     @application.administrator.must_equal administrator
     @application.status.must_equal 'approved'
@@ -162,7 +162,7 @@ describe "VisitorRegistersOnApprovedPlan Integration Test" do
 
   def when_my_application_is_rejected 
     mailing_list_processor.expects(:application_rejected).with(@application)
-    @application.rejected_by administrator, reason: 'You know nothing', mail_processor: mailing_list_processor
+    @application.rejected_by administrator, reason: 'You know nothing', mailing_list_processor: mailing_list_processor
     @application.reload
     @application.administrator.must_equal administrator
     @application.status.must_equal 'rejected'

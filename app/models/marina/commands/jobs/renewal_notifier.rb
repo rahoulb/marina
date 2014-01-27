@@ -13,12 +13,12 @@ module Marina
           log "...about to send two week renewals..."
           two_week_renewals.each do | member |
             log "...#{member.email}..."
-            member.first_renewal ? mail_processor.initial_two_week_renewal_notification(member) : mail_processor.two_week_renewal_notification(member)
+            member.first_renewal ? mailing_list_processor.initial_two_week_renewal_notification(member) : mailing_list_processor.two_week_renewal_notification(member)
           end
           log "...about to send four week renewals..."
           four_week_renewals.each do | member |
             log "...#{member.email}..."
-            member.first_renewal ? mail_processor.initial_four_week_renewal_notification(member) : mail_processor.four_week_renewal_notification(member)
+            member.first_renewal ? mailing_list_processor.initial_four_week_renewal_notification(member) : mailing_list_processor.four_week_renewal_notification(member)
           end
           log "...done"
         end
@@ -31,7 +31,7 @@ module Marina
           Marina::Db::Member.renewal_due_in_four_weeks
         end
 
-        def mail_processor
+        def mailing_list_processor
           Marina::Application.config.mailing_list_processor
         end
       end

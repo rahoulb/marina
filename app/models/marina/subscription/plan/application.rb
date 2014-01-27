@@ -5,11 +5,11 @@ module Marina
     module Plan
       module Application
 
-        # params: mail_processor, payment_processor, reason_for_affiliation_rejection
+        # params: mailing_list_processor, payment_processor, reason_for_affiliation_rejection
         def accepted_by administrator, params = {}
           update_attributes! administrator: administrator, status: 'approved', reason_for_affiliation_rejection: params[:reason_for_affiliation_rejection]
 
-          mails = params[:mail_processor]
+          mails = params[:mailing_list_processor]
           payments = params[:payment_processor]
           return if mails.nil? && payments.nil?
 
@@ -17,11 +17,11 @@ module Marina
           mails.application_approved self, payments
         end
 
-        # params: reason, mail_processor
+        # params: reason, mailing_list_processor
         def rejected_by administrator, params = {}
           update_attributes! administrator: administrator, reason_for_rejection: params[:reason], status: 'rejected'
 
-          mails = params[:mail_processor]
+          mails = params[:mailing_list_processor]
           mails.application_rejected self unless mails.nil?
         end
       end

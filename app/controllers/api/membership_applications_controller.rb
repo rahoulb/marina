@@ -32,7 +32,7 @@ class Api::MembershipApplicationsController < ApplicationController
   end
 
   def updater
-    ::Marina::Commands::Builders::MembershipApplicationUpdater.new user: current_user, data_store: Marina::Db::Subscription::ReviewedPlan::Application, mail_processor: Marina::Application.config.mailing_list_processor, payment_processor: Marina::Application.config.payment_processor
+    ::Marina::Commands::Builders::MembershipApplicationUpdater.new user: current_user, data_store: Marina::Db::Subscription::ReviewedPlan::Application, mailing_list_processor: Marina::Application.config.mailing_list_processor, payment_processor: Marina::Application.config.payment_processor
   end
 
   def builder
