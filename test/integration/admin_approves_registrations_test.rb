@@ -17,7 +17,16 @@ describe "AdminApprovesRegistrations Integration Test" do
       then_the_application_should_be_approved
       then_the_member_should_receive_an_email_with_payment_details
     end
-    it "marks an application as accepted but rejects the affiliations"
+
+    it "marks an application as accepted but rejects the affiliations" do
+      given_some_outstanding_membership_applications
+      given_a_payment_processor_and_mailing_list_processor
+      when_i_accept_an_application_but_reject_the_affiliation
+      then_the_application_should_be_approved
+      then_there_should_be_no_discount_applied
+      then_the_member_should_receive_an_email_with_payment_details
+    end
+
     it "marks an application as rejected" 
 
     let(:admin) { a_saved Marina::Db::Member, permissions: ['approve_membership_applications'] }
@@ -49,13 +58,22 @@ describe "AdminApprovesRegistrations Integration Test" do
       post "/api/membership_applications/#{application.id}/accept", application: { some: 'data' }, format: 'json'
     end
 
+    def when_i_accept_an_application_but_reject_the_affiliation
+      mailing_list_processor.expects(:application_approved).with(application, payment_processor)
+      post "/api/membership_applications/#{application.id}/accept", application: { reason_for_affiliation_rejection: 'No way'}, format: 'json'
+    end
+
     def then_the_application_should_be_approved
       application.reload
       application.status.must_equal 'approved'
     end
 
     def then_the_member_should_receive_an_email_with_payment_details
-      # handled by the earlier expects
+      # handled by the earlier expects on the mailing processor
+    end
+
+    def then_there_should_be_no_discount_applied
+      # handled by the lack of an expects call on the payment processor
     end
 
     def then_i_should_see_the_application_details

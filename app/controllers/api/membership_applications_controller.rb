@@ -34,7 +34,7 @@ class Api::MembershipApplicationsController < ApplicationController
   end
 
   def acceptance_params
-    params.require(:application).permit(:reason_for_affiliate_rejection)
+    params.require(:application).permit(:reason_for_affiliation_rejection)
   end
 
   def rejection_params
