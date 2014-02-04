@@ -66,9 +66,15 @@ module Marina
       subscriptions.count < 2
     end
 
+    def value_for field_definition
+      self[:data] ||= {}
+      self[:data][field_definition.name.to_s]
+    end
+
     def method_missing meffod, *args, &block
       super
     rescue NoMethodError => nme
+      self[:data] ||= {}
       return data[meffod.to_s] if self[:data].has_key?(meffod.to_s)
       return set_data_for(meffod, args) if meffod.to_s =~ /(.*)=/
       raise nme

@@ -3,7 +3,7 @@ class Api::MembersController < ApplicationController
 
   def create
     member_builder.build_from member_params do | member, plan |
-      render partial: 'member', locals: { member: member }, status: 201
+      render partial: 'member', locals: { member: member, field_definitions: field_definitions }, status: 201
     end
   end
 
@@ -20,6 +20,10 @@ class Api::MembersController < ApplicationController
       affiliate_organisation_store: Marina::Db::AffiliateOrganisation, 
       voucher_store: Marina::Db::Voucher
     })
+  end
+
+  def field_definitions
+    Marina::Db::FieldDefinition.all
   end
 
   def member_params

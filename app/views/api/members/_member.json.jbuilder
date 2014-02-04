@@ -1,4 +1,4 @@
-json.cache! member do 
+json.cache! [member, field_definitions] do 
   json.id member.id
   json.username member.username
   json.email member.email
@@ -19,7 +19,7 @@ json.cache! member do
   json.telephone member.telephone
   json.web_address member.web_address
   json.source member.source
-  (member.data || {}).each do | field_name, value |
-    json.set! field_name, value
+  field_definitions.each do | field_definition |
+    json.set! member.value_for(field_definition)
   end
 end

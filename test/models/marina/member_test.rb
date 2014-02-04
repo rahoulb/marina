@@ -171,7 +171,17 @@ describe Marina::Member do
       subject.data['that'].must_equal 'World'
     end
 
+    it "can be accessed via a field definition" do
+      subject.value_for(field_definition).must_equal 'THIS'
+    end
+
+    it "can be accessed via a field definition even if the data has not been set" do
+      subject.data = nil
+      subject.value_for(field_definition).must_equal nil
+    end
+
     let(:field_definition_names) { [:this, :that] }
+    let(:field_definition) { stub 'Field Definition', name: 'this' }
   end
 
   describe "API token" do
