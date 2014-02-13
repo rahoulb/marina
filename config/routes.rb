@@ -31,5 +31,7 @@ Marina::Application.routes.draw do
       resources :latest_members, only: [:show]
       resource :members_search, only: [:show], controller: 'members_search'
     end
+
+    resources :vouchers
   end
 end
