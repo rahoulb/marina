@@ -3,7 +3,7 @@ require_relative '../fetcher'
 module Marina
   module Commands
     module Fetchers
-      class Vouchers < Fetcher
+      class VouchersFetcher < Fetcher
 
         def initialize params = {}
           super params.merge(permission: :list_vouchers)
