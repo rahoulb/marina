@@ -9,6 +9,7 @@ module Marina
       when 'Marina::Db::FieldDefinition::Select' then 'drop_down'
       when 'Marina::Db::FieldDefinition::MultiSelect' then 'multi_select'
       when 'Marina::Db::FieldDefinition::Boolean' then 'checkbox'
+      when 'Marina::Db::FieldDefinition::Date' then 'date'
       end
     end
 
@@ -20,6 +21,7 @@ module Marina
       when 'drop_down' then 'Marina::Db::FieldDefinition::Select'
       when 'multi_select' then 'Marina::Db::FieldDefinition::MultiSelect'
       when 'checkbox' then 'Marina::Db::FieldDefinition::Boolean'
+      when 'date' then 'Marina::Db::FieldDefinition::Date'
       end
     end
 
@@ -42,6 +44,10 @@ module Marina
         return false unless selected.include? value.strip
       end
       return true
+    end
+
+    def date_match member, value
+      member.data[self.name] == value
     end
   end
 end
