@@ -35,4 +35,10 @@ class Marina::Db::FieldDefinition < ActiveRecord::Base
     end
   end
 
+  class Date < Marina::Db::FieldDefinition
+    def matches member, value
+      date_match member, value
+    end
+  end
+
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140126173227) do
+ActiveRecord::Schema.define(version: 20140219103333) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(version: 20140126173227) do
     t.datetime "last_login_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "payment_processor_id"
   end
 
   add_index "marina_db_members", ["site_id", "api_token"], name: "index_marina_db_members_on_site_id_and_api_token", unique: true, using: :btree
@@ -149,6 +150,7 @@ ActiveRecord::Schema.define(version: 20140126173227) do
     t.boolean  "active",                                                      default: true,  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "plan_url"
   end
 
   add_index "marina_db_subscription_plans", ["site_id", "name"], name: "index_marina_db_subscription_plans_on_site_id_and_name", unique: true, using: :btree

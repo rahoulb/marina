@@ -192,6 +192,29 @@ describe Marina::Member do
     end
   end
 
+  describe "Payment Processor ID" do
+    before { subject.id = 123 }
+
+    it "is generated if it is blank" do
+      subject.generate_payment_processor_id
+      subject.payment_processor_id.must_equal 100123
+    end
+
+    it "does nothing if it is already set" do
+      subject.payment_processor_id = 555
+
+      subject.generate_payment_processor_id
+      subject.payment_processor_id.must_equal 555
+    end
+
+    it "does nothing if the member's ID has not been set" do
+      subject.id = nil
+
+      subject.generate_payment_processor_id
+      subject.payment_processor_id.must_equal nil
+    end
+  end
+
   describe "permissions" do
     before do
       subject.permissions = ['do_something']
@@ -214,7 +237,7 @@ describe Marina::Member do
   end
 
   let(:member_class) do 
-    Class.new(Struct.new(:first_name, :last_name, :password, :password_confirmation, :encrypted_password, :subscriptions, :api_token, :permissions, :data, :has_directory_listing)) do
+    Class.new(Struct.new(:id, :first_name, :last_name, :password, :password_confirmation, :encrypted_password, :subscriptions, :api_token, :permissions, :data, :has_directory_listing, :payment_processor_id)) do
       include Marina::Member
 
       class << self

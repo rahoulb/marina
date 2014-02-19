@@ -42,6 +42,13 @@ describe Marina::FieldDefinition do
         subject.type.must_equal 'Marina::Db::FieldDefinition::Boolean'
       end
     end
+
+    describe "for date fields" do
+      it "sets the type" do
+        subject.kind = 'date'
+        subject.type.must_equal 'Marina::Db::FieldDefinition::Date'
+      end
+    end
   end
 
   describe "reading the kind of the field" do
@@ -64,6 +71,10 @@ describe Marina::FieldDefinition do
     it "recognises checkbox fields" do
       subject.type = 'Marina::Db::FieldDefinition::Boolean'
       subject.kind.must_equal 'checkbox'
+    end
+    it "recognises date fields" do
+      subject.type = 'Marina::Db::FieldDefinition::Date'
+      subject.kind.must_equal 'date'
     end
   end
 
@@ -105,6 +116,16 @@ describe Marina::FieldDefinition do
       it "matches if all the given values are selected" do
         subject.multi_select_match(member, 'this,that').must_equal true
         subject.multi_select_match(member, 'this,that,theother').wont_equal true
+      end
+    end
+
+    describe "for date fields" do
+      let(:member) { stub 'Member', data: { 'first_field' => date } }
+      let(:date) { Date.today }
+
+      it "matches if the given value matches" do
+        subject.date_match(member, date).must_equal true
+        subject.date_match(member, date + 1).wont_equal true
       end
     end
   end

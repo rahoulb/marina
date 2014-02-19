@@ -25,7 +25,7 @@ module Marina
         end
 
         def member
-          Marina::Db::Member.find member_id
+          Marina::Db::Member.where(payment_processor_id: member_id).first || Marina::Db::Member.find(member_id)
         end
 
         def plan_by_feature_level feature_level

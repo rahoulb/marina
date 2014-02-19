@@ -21,6 +21,7 @@ class Marina::Db::Member < ActiveRecord::Base
   scope :latest_members, -> (count) { order(:created_at).limit(count) }
 
   before_save :encrypt_password
+  before_save :generate_payment_processor_id
   before_create :generate_api_token
   after_save :update_directory_listing
 

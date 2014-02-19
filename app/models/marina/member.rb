@@ -53,6 +53,10 @@ module Marina
       self.api_token = 48.random_letters
     end
 
+    def generate_payment_processor_id
+      self.payment_processor_id = self.id + 100000 if self.payment_processor_id.blank? && !self.id.blank?
+    end
+
     def record_login
       self.update_attribute :last_login_at, Time.now
     end
