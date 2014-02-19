@@ -2,8 +2,14 @@ development:
   secret_key_base: 'some secret'
   auto_approval_code: 'FULLMEMBER'
   admin_username: 'admin-user'
+  pin_payment_api_key: 'KEY'
+  pin_payment_site: 'SITE'
+  pin_payment_url: 'URL'
 
 test: 
   secret_key_base: 'some secret'
   auto_approval_code: 'FULLMEMBER'
   admin_username: 'admin-user'
+  pin_payment_api_key: 'KEY'
+  pin_payment_site: 'SITE'
+  pin_payment_url: 'URL'
