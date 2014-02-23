@@ -58,7 +58,17 @@ namespace :mpg do
   end
 
   def connect_to_old_database
-    LegacyMpgUser.establish_connection :legacy_mpg_database
+    puts "Database password: "
+    password = gets.strip
+
+    LegacyMpgUser.establish_connection({ 
+      adapter: 'mysql2',
+      database: 'mpg_legacy',
+      host: 'db001.3hv.co.uk',
+      username: 'mpg',
+      password: password
+    })
+
     LegacyMpgUser.table_name = 'users'
   end
 
