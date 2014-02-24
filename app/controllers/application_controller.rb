@@ -6,8 +6,16 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def authenticator
+    @authenticator ||= Marina::Application.config.authenticator_class.constantize.new
+  end
+
+  def current_user_id
+    authenticator.user_id_from session, cookies
+  end
+
   def current_user
-    @current_user ||= Marina::Db::Member.where(id: session[:user_id]).first
+    @current_user ||= Marina::Db::Member.where(id: current_user_id).first
   end
 
   def current_account
