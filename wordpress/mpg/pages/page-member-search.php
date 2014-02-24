@@ -171,14 +171,13 @@ get_header(); ?>
     	<!-- /Part 1 -->
       
     	<!-- Part 2 -->
-      <!-- Filtered li of all results from search query -->
       <h1 class="the_title">We have <span class="the_title" data-bind="text: membersDb.items().length"></span> results for your search!</h1>
       <ul class="membersearch-list">
         <!-- ko foreach: membersDb.items -->
         <li>
         	<a href="#"><img src="http://amba-design.com/mpg/wp-content/uploads/2013/09/andrew-hunt.jpg"  align="left"/></a>
           <h3 data-bind="text: name"></h3>
-          <a href="#" class="twitter_bs btn btn-large">View <span data-bind="text: firstName"></span>'s Profile</a>
+          <a href="#" class="twitter_bs btn btn-large" data-bind="click: select">View <span data-bind="text: firstName"></span>'s Profile</a>
         </li>
         <!-- /ko -->
         <div class="mpg-clear"></div>
@@ -193,10 +192,8 @@ get_header(); ?>
           <img src="http://amba-design.com/mpg/wp-content/uploads/2013/09/andrew-hunt.jpg" />      
         </div>
         <div class="member-profile-details">
-          <h1>Joe Bloggs</h1>
-          
-          <p class="member-profile-member">Full (lifetime) Membership</p>
-          
+          <h1 data-bind="text: name"></h1>
+          <p class="member-profile-member" data-bind="text: subscriptionPlan"></p>
           <div class="member-profile-social">Social:</div>
           <div class="member-profile-social-r">
             <div class="socialshare">
@@ -209,13 +206,10 @@ get_header(); ?>
               </ul>
             </div>
           </div>
-          
           <div class="member-profile-email">Email:</div>
-          <div class="member-profile-email-r"><a href="mailto:#">joe.bloggs@ambadesign.com</a></div>
-          
+          <div class="member-profile-email-r"><a data-bind="attr: { href: 'mailto:' + email() }"></a></div>
           <div class="member-profile-web">Website:</div>
-          <div class="member-profile-web-r"><a href="#">www.ambadesign.com</a></div>
-          
+          <div class="member-profile-web-r"><a data-bind="attr: { href: webAddress }"></a></div>
           <div class="member-profile-skype">Skype:</div>
           <div class="member-profile-skype-r"><img src="http://mystatus.skype.com/smallclassic/mickglossop" style="border: none;" width="114" height="20" alt="My status"></div>
         </div>
@@ -241,17 +235,13 @@ get_header(); ?>
           </li>
         </ul>
         <div class="mpg-clear"></div>
-        </div>
         
         <div class="member-profile-management">
           <h3>Management</h3> <strong>Name:</strong> Giles Stanley <strong class="title">Company:</strong> Gsm Management <strong class="title">Email:</strong> info@gs-music.com
         </div>
       </div>
       
-      <div class="the_content">
-          <p>I've been producing, engineering and mixing for over 25 years, initially with new wave and punk bands such as Magazine, Public Image Ltd, Penetration, The Skids and The Ruts. I had further success collaborating with The Waterboys, Furniture, The Wonder Stuff, Frank Zappa, Ian Gillan, John Lee Hooker, Lloyd Cole and Paul Brady. </p>
-          <p>I have a 20 year working relationship with Van Morrison, covering 17 albums, and recently I recorded and mixed "Astral Weeks, Live at The Hollywood Bowl" for CD and DVD release, for which I received the "Best Live DVD of 2010" award from the Music Producers Guild (UK). </p>
-          <p>My work has also featured many left-field and ground-breaking artists including Tangerine Dream, Xmal Deutschland, Manuel Göttsching (Ashra) and Southern Death Cult. </p>
+      <div class="the_content" data-bind="html: biography"></div>
       
       	<!-- Audio uploads - I haven't the foggiest how your gonna do this - Wordpress has a oembed function to recognise mp3 URL's and replace them with players - can you utilise that in anyway? -->
         <div class="the_music">
@@ -271,35 +261,32 @@ get_header(); ?>
         </div>
         <!-- /ko -->
       </div>
-    	<!-- /Part 3 -->
-
-      
-      
-      </div>
-      <div class="span4">
-        <div class="mpg-sidebar mpg-sidebar-container">
-        
-        	<!-- Latest Members -->
-          <div>
-          	<h2>Latest Members</h2>
-            <ul>	
-            	<li><a href="#" title="#">Joe Bloggs <span>Joined 4 days ago</span></a></li>
-            	<li><a href="#" title="#">John Doe <span>Joined 5 days ago</span></a></li>
-            	<li><a href="#" title="#">Joe Bloggs <span>Joined 7 days ago</span></a></li>
-            	<li><a href="#" title="#">John Doe <span>Joined 11 days ago</span></a></li>
-            	<li><a href="#" title="#">Joe Bloggs <span>Joined 99999 days ago</span></a></li>
-            </ul>
-          </div>
-          <!-- /Latest Members -->
-          
-					<?php if ( ! dynamic_sidebar( 'Members Directory' ) ) { };?>
-					<?php get_template_part( 'includes/widget-control', 'default' ); ?>
-
-        </div>
-      </div>
-    
+      <!-- /Part 3 -->
     </div>
-	</div>
+    <div class="span4">
+      <div class="mpg-sidebar mpg-sidebar-container">
+      
+        <!-- Latest Members -->
+        <div>
+          <h2>Latest Members</h2>
+          <ul>	
+            <li><a href="#" title="#">Joe Bloggs <span>Joined 4 days ago</span></a></li>
+            <li><a href="#" title="#">John Doe <span>Joined 5 days ago</span></a></li>
+            <li><a href="#" title="#">Joe Bloggs <span>Joined 7 days ago</span></a></li>
+            <li><a href="#" title="#">John Doe <span>Joined 11 days ago</span></a></li>
+            <li><a href="#" title="#">Joe Bloggs <span>Joined 99999 days ago</span></a></li>
+          </ul>
+        </div>
+        <!-- /Latest Members -->
+        
+        <?php if ( ! dynamic_sidebar( 'Members Directory' ) ) { };?>
+        <?php get_template_part( 'includes/widget-control', 'default' ); ?>
+
+      </div>
+    </div>
+  
+  </div>
+</div>
 <?php get_footer(); ?>
 <script type="text/javascript" src="/wp-content/themes/wpbootstrap/js/knockout.js"></script>
 <script type="text/javascript" src="/wp-content/themes/wpbootstrap/js/data-access.js"></script>

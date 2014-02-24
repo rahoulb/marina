@@ -44,6 +44,7 @@
       baseUrl = "/api/members_directory/members_search.json?z=z";
       baseUrl = baseUrl + ("&last_name=" + (this.lastName()));
       this.url(baseUrl);
+      this.items.removeAll();
       return this.load(false);
     };
 
@@ -67,12 +68,26 @@
       this.firstName = ko.observable('');
       this.lastName = ko.observable('');
       this.name = ko.observable('');
+      this.email = ko.observable('');
+      this.skype = ko.observable('');
+      this.facebook = ko.observable('');
+      this.twitter = ko.observable('');
+      this.webAddress = ko.observable('');
+      this.subscriptionPlan = ko.observable('');
+      this.biography = ko.observable('');
     }
 
     Member.prototype.updateAttributes = function(data) {
       this.firstName(data.firstName);
       this.lastName(data.lastName);
-      return this.name(data.name);
+      this.name(data.name);
+      this.email(data.email);
+      this.skype(data.skype);
+      this.facebook(data.facebook);
+      this.twitter(data.twitter);
+      this.webAddress(data.webAddress);
+      this.subscriptionPlan(data.subscriptionPlan);
+      return this.biography(data.biography);
     };
 
     return Member;

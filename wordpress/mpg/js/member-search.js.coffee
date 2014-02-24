@@ -23,6 +23,7 @@ class MembersDb extends Db
     baseUrl = baseUrl + "&last_name=#{@lastName()}"
 
     @url baseUrl
+    @items.removeAll()
     @load false
 
   newItem: (id)->
@@ -37,11 +38,25 @@ class Member extends Model
     @firstName = ko.observable ''
     @lastName = ko.observable ''
     @name = ko.observable ''
+    @email = ko.observable ''
+    @skype = ko.observable ''
+    @facebook = ko.observable ''
+    @twitter = ko.observable ''
+    @webAddress = ko.observable ''
+    @subscriptionPlan = ko.observable ''
+    @biography = ko.observable ''
 
   updateAttributes: (data)->
     @firstName data.firstName
     @lastName data.lastName
     @name data.name
+    @email data.email
+    @skype data.skype
+    @facebook data.facebook
+    @twitter data.twitter
+    @webAddress data.webAddress
+    @subscriptionPlan data.subscriptionPlan
+    @biography data.biography
 
 window.viewModel = new MemberSearchViewModel
 
