@@ -4,7 +4,7 @@ set :deploy_to, '/var/www/rails'
 set :scm, :git
 
 set :format, :pretty
-set :log_level, :debug
+set :log_level, :info
 
 set :linked_files, %w{config/database.yml config/application.yml .env}
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
