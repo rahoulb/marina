@@ -2,7 +2,7 @@ require 'digest/md5'
 module Marina
   module Commands
     class WordpressAuthenticator
-      def user_id_from session, cookies
+      def user_id_from request, session, cookies
         Marina::Db::Member.by_username(username_from(cookies))
       end
 

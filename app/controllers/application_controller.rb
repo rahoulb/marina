@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user_id
-    authenticator.user_id_from session, cookies
+    authenticator.user_id_from request, session, cookies
   end
 
   def current_user
