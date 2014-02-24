@@ -20,6 +20,6 @@ json.cache! [member, field_definitions] do
   json.web_address member.web_address
   json.source member.source
   field_definitions.each do | field_definition |
-    json.set! member.value_for(field_definition)
+    json.set! field_definition.name.to_s, member.value_for(field_definition)
   end
 end
