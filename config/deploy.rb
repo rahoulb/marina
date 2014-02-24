@@ -3,6 +3,22 @@ set :repo_url, 'git@github.com:rahoulb/marina.git'
 set :deploy_to, '/var/www/rails'
 set :scm, :git
 
+set :bundle_gemfile, -> { release_path.join('Gemfile') }
+set :bundle_dir, -> { shared_path.join('bundle') }
+set :bundle_flags, '--deployment --quiet'
+set :bundle_without, %w{development test}.join(' ')
+set :bundle_binstubs, -> { shared_path.join('bin') }
+set :bundle_bins, %w(gem rake ruby)
+set :bundle_roles, :all
+set :whenever_roles,        ->{ :db }
+set :whenever_options,      ->{ {:roles => fetch(:whenever_roles)} }
+set :whenever_command,      ->{  }
+set :whenever_identifier,   ->{ fetch :application }
+set :whenever_environment,  ->{ fetch :rails_env, "production" }
+set :whenever_variables,    ->{ "environment=#{fetch :whenever_environment}" }
+set :whenever_update_flags, ->{ "--update-crontab #{fetch :whenever_identifier} --set #{fetch :whenever_variables}" }
+set :whenever_clear_flags,  ->{ "--clear-crontab #{fetch :whenever_identifier}" }
+set :migration_role, :db
 set :format, :pretty
 set :log_level, :info
 
