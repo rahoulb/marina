@@ -59,7 +59,7 @@ namespace :mpg do
 
   def connect_to_old_database
     puts "Database password: "
-    password = gets.strip
+    password = STDIN.gets.strip
 
     LegacyMpgUser.establish_connection({ 
       adapter: 'mysql2',
