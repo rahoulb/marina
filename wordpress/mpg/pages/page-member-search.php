@@ -157,37 +157,36 @@ get_header(); ?>
       <div class="span8">
       
     	<!-- Part 1 -->
-      
 				<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
         <div class="the_content">
           <h1><?php the_title(); ?></h1>
 					<?php the_content(); ?>
     		</div>
-        
         <?php endwhile; else: ?>
           <p><?php _e('Sorry, this page does not exist.'); ?></p>
         <?php endif; ?>
-
     	<!-- /Part 1 -->
       
     	<!-- Part 2 -->
-      <h1 class="the_title">We have <span class="the_title" data-bind="text: membersDb.items().length"></span> results for your search!</h1>
-      <ul class="membersearch-list">
-        <!-- ko foreach: membersDb.items -->
-        <li>
-        	<a href="#"><img src="http://amba-design.com/mpg/wp-content/uploads/2013/09/andrew-hunt.jpg"  align="left"/></a>
-          <h3 data-bind="text: name"></h3>
-          <a href="#" class="twitter_bs btn btn-large" data-bind="click: select">View <span data-bind="text: firstName"></span>'s Profile</a>
-        </li>
-        <!-- /ko -->
-        <div class="mpg-clear"></div>
-      </ul>
+      <div data-bind="ifnot: membersDb.selected">
+        <h1 class="the_title">We have <span class="the_title" data-bind="text: membersDb.items().length"></span> results for your search!</h1>
+        <ul class="membersearch-list">
+          <!-- ko foreach: membersDb.items -->
+          <li>
+            <a href="#"><img src="http://amba-design.com/mpg/wp-content/uploads/2013/09/andrew-hunt.jpg"  align="left"/></a>
+            <h3 data-bind="text: name"></h3>
+            <a href="#" class="twitter_bs btn btn-large" data-bind="click: select">View <span data-bind="text: firstName"></span>'s Profile</a>
+          </li>
+          <!-- /ko -->
+          <div class="mpg-clear"></div>
+        </ul>
+      </div>
     	<!-- /Part 2 -->
 
     	<!-- Part 3 -->
-      <!-- Profile results -->
-      <div class="member-profile-container" data-bind="if: membersDb.selected">
+      <div class="member-profile-container" data-bind="appearif: membersDb.selected">
         <!-- ko with: membersDb.selected -->
+        <div class="pull-right" class="the_content"><a href="#" data-bind="click: deselect">&times;</a></div>
       	<div class="member-profile-avatar">
           <img src="http://amba-design.com/mpg/wp-content/uploads/2013/09/andrew-hunt.jpg" />      
         </div>
@@ -237,7 +236,10 @@ get_header(); ?>
         <div class="mpg-clear"></div>
         
         <div class="member-profile-management">
-          <h3>Management</h3> <strong>Name:</strong> Giles Stanley <strong class="title">Company:</strong> Gsm Management <strong class="title">Email:</strong> info@gs-music.com
+          <h3>Management</h3> 
+          <strong>Name:</strong> <span data-bind="text: managementName"></span>
+          <strong class="title">Company:</strong> <span data-bind="text: managementCompany"></span>
+          <strong class="title">Email:</strong> <span data-bind="text: managementEmail"></span>
         </div>
       </div>
       
@@ -265,16 +267,13 @@ get_header(); ?>
     </div>
     <div class="span4">
       <div class="mpg-sidebar mpg-sidebar-container">
-      
         <!-- Latest Members -->
         <div>
           <h2>Latest Members</h2>
           <ul>	
-            <li><a href="#" title="#">Joe Bloggs <span>Joined 4 days ago</span></a></li>
-            <li><a href="#" title="#">John Doe <span>Joined 5 days ago</span></a></li>
-            <li><a href="#" title="#">Joe Bloggs <span>Joined 7 days ago</span></a></li>
-            <li><a href="#" title="#">John Doe <span>Joined 11 days ago</span></a></li>
-            <li><a href="#" title="#">Joe Bloggs <span>Joined 99999 days ago</span></a></li>
+            <!-- ko foreach: latestMembersDb.items -->
+            <li><span data-bind="text: name" class="name"></span> <span>Joined <span data-bind="text: createdAt"></span></span></li>
+            <!-- /ko -->
           </ul>
         </div>
         <!-- /Latest Members -->

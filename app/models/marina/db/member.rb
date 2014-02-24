@@ -18,7 +18,7 @@ class Marina::Db::Member < ActiveRecord::Base
   scope :visible_to_members, -> { where('visible_to = ? or visible_to = ?', 'all', 'some') }
   scope :by_last_name, -> (last_name) { where('last_name like ?', "#{last_name}%") }
   scope :all_latest_members, -> { order(:created_at) }
-  scope :latest_members, -> (count) { order(:created_at).limit(count) }
+  scope :latest_members, -> (count) { order('created_at desc').limit(count) }
 
   before_save :encrypt_password
   before_save :generate_payment_processor_id

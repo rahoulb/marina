@@ -4,9 +4,21 @@ class MemberSearchViewModel extends ViewModel
   constructor: ->
     super
     @membersDb = new MembersDb this
+    @latestMembersDb = new LatestMembersDb this
+    @latestMembersDb.load true
 
   deselectLetters: ->
     jQuery('.membersearch-alpha a').removeClass 'alpha-active'
+
+class LatestMembersDb extends Db
+  constructor: (viewModel)->
+    super viewModel, 'latestMember', "/api/members_directory/latest_members/6.json"
+
+  newItem: (id)->
+    new Member id, this
+
+  itemDataFrom: (data)->
+    data.members
 
 class MembersDb extends Db
   constructor: (viewModel)->
@@ -45,6 +57,10 @@ class Member extends Model
     @webAddress = ko.observable ''
     @subscriptionPlan = ko.observable ''
     @biography = ko.observable ''
+    @createdAt = ko.observable null
+    @managementName = ko.observable ''
+    @managementCompany = ko.observable ''
+    @managementEmail = ko.observable ''
 
   updateAttributes: (data)->
     @firstName data.firstName
@@ -57,6 +73,10 @@ class Member extends Model
     @webAddress data.webAddress
     @subscriptionPlan data.subscriptionPlan
     @biography data.biography
+    @createdAt data.createdAt
+    @managementName data.managementName
+    @managementCompany data.managementCompany
+    @managementEmail data.managementEmail
 
 window.viewModel = new MemberSearchViewModel
 
