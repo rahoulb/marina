@@ -1,0 +1,3 @@
+#!/bin/sh
+
+scp -r wordpress/mpg/* app@mpg001.3hv.co.uk:/var/www/wordpress/wp-content/themes/wpbootstrap/js/
