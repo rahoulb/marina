@@ -1,5 +1,5 @@
 # Set your full path to application.
-app_path = "/var/www/products/current"
+app_path = "/var/www/rails/current"
 
 # Set unicorn options
 worker_processes 2
