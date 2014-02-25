@@ -5,6 +5,7 @@ development:
   pin_payment_api_key: 'KEY'
   pin_payment_site: 'SITE'
   pin_payment_url: 'URL'
+  authenticator_class: 'Marina::Commands::StandardAuthenticator'
 
 test: 
   secret_key_base: 'some secret'
@@ -13,3 +14,4 @@ test:
   pin_payment_api_key: 'KEY'
   pin_payment_site: 'SITE'
   pin_payment_url: 'URL'
+  authenticator_class: 'Marina::Commands::StandardAuthenticator'

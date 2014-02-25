@@ -58,7 +58,17 @@ namespace :mpg do
   end
 
   def connect_to_old_database
-    LegacyMpgUser.establish_connection :legacy_mpg_database
+    puts "Database password: "
+    password = STDIN.gets.strip
+
+    LegacyMpgUser.establish_connection({ 
+      adapter: 'mysql2',
+      database: 'mpg_legacy',
+      host: 'db001.3hv.co.uk',
+      username: 'mpg',
+      password: password
+    })
+
     LegacyMpgUser.table_name = 'users'
   end
 
@@ -71,6 +81,8 @@ namespace :mpg do
       end
       new_user.update_attributes!({
         payment_processor_id: legacy_user.id,
+        visible_to: privacy_setting_for(legacy_user),
+        visible_plans: visible_plans_for(legacy_user),
         encrypted_password: legacy_user.hashed_password,
         title: legacy_user.title,
         first_name: legacy_user.first_name,
@@ -106,6 +118,26 @@ namespace :mpg do
         }
       })
       add_subscription(new_user, legacy_user) if legacy_user.is_active
+    end
+  end
+
+  def privacy_setting_for legacy_user
+    case legacy_user.make_me_private.to_s
+    when 'public' then 'all'
+    when 'members_only' then 'some'
+    else 'none'
+    end
+  end
+
+  def all_plan_ids
+    @all_plan_ids = Marina::Db::Subscription::Plan.all.collect &:id
+  end
+
+  def visible_plans_for legacy_user
+    case legacy_user.make_me_private.to_s
+    when 'public' then all_plan_ids
+    when 'members_only' then all_plan_ids
+    else []
     end
   end
 

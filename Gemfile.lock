@@ -60,6 +60,7 @@ GEM
       execjs
     coffee-script-source (1.6.3)
     colorize (0.5.8)
+    dalli (2.7.0)
     database_cleaner (1.2.0)
     delayed_job (4.0.0)
       activesupport (>= 3.0, < 4.1)
@@ -221,6 +222,7 @@ DEPENDENCIES
   bcrypt-ruby
   capistrano-rails
   coffee-rails (~> 4.0.0)
+  dalli
   database_cleaner
   delayed_job_active_record
   foreman

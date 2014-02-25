@@ -17,6 +17,7 @@ gem 'unicorn'
 gem 'delayed_job_active_record'
 gem 'acts_as_list'
 gem 'gibbon'
+gem 'dalli'
 
 group :doc do
   gem 'sdoc', require: false
