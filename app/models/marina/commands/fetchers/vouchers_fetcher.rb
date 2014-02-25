@@ -6,7 +6,7 @@ module Marina
       class VouchersFetcher < Fetcher
 
         def initialize params = {}
-          super params.merge!(permission: :list_vouchers)
+          super params.merge!(permission: :manage_vouchers)
         end
 
         def do_fetch params = nil

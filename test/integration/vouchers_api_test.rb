@@ -1,25 +1,52 @@
 require_relative "../test_helper"
 
 describe 'VoucherAPI Integration Test' do
-
-  it 'fetch all vouchers' do
-    login_as member
-    create_vouchers
-    fetch_vouchers
+  describe 'when user is not logged in' do
+    it 'should not able to manage voucher' do
+      fetch_vouchers
+      response_should_not_be_success
+    end
   end
 
-  it 'creates a new voucher of type Voucher::Credit' do
-    login_as member
-    create_voucher_of_type('Marina::Db::Voucher::Credit')
+  describe 'when user is logged in' do
+    describe 'and have invalid permissions' do
+      it 'should not able to manage voucher' do
+        member.update_attribute :permissions, []
+        login_as member
+        fetch_vouchers
+        response_should_not_be_success
+      end
+    end
+
+    describe 'and has valid valid permissions' do
+
+      it 'fetch all vouchers' do
+        login_as member
+        create_vouchers
+        fetch_vouchers
+        response_should_be_success
+      end
+
+      it 'creates a new voucher of type Voucher::Credit' do
+        login_as member
+        create_voucher_of_type('Marina::Db::Voucher::Credit')
+      end
+
+
+      it 'creates a new voucher of type Voucher::FreeTime' do
+        login_as member
+        create_voucher_of_type('Marina::Db::Voucher::FreeTime')
+      end
+
+      it 'should update a voucher' do
+        login_as member
+        create_vouchers
+        update_voucher Marina::Db::Voucher.last.id, { code: 'UPDATED' }
+      end
+    end
   end
 
-
-  it 'creates a new voucher of type Voucher::FreeTime' do
-    login_as member
-    create_voucher_of_type('Marina::Db::Voucher::FreeTime')
-  end
-
-  let(:member) { a_saved Marina::Db::Member }
+  let(:member) { a_saved Marina::Db::Member, permissions: ['manage_vouchers'] }
   let(:params) { { code: 'SAMPLE', days: 10, amount: 12.0 } }
 end
 
@@ -31,10 +58,22 @@ end
 
 def fetch_vouchers
   get "/api/vouchers", format: 'json'
-  response.status.must_equal 200
 end
 
 def create_voucher_of_type(type)
-  post "/api/vouchers", voucher: params.merge(type: type)
+  post "/api/vouchers", voucher: params.merge(type: type), format: 'json'
+  response_should_be_success
+end
+
+def update_voucher(voucher_id, params)
+  put "/api/vouchers/#{voucher_id}", voucher: params
+end
+
+def response_should_be_success
   response.status.must_equal 200
 end
+
+def response_should_not_be_success
+  response.status.must_equal 401
+end
+

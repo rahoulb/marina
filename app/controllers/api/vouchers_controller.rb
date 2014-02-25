@@ -2,19 +2,21 @@ class Api::VouchersController < ApplicationController
   respond_to :json
 
   def index
-    vouchers.do_fetch do | found |
+    vouchers.fetch do | found |
       render action: 'index', locals: { vouchers: found }
     end
   end
 
   def create
     voucher_builder.build_from voucher_params do | created |
-      render partial: 'voucher', locals: { voucher: created }
+      render partial: '/api/vouchers/voucher', locals: { voucher: created }
     end
   end
 
-  def update
-
+   def update
+    voucher_builder.update params[:id], voucher_params do | updated |
+      render partial: '/api/vouchers/voucher', locals: { voucher: updated }
+    end
   end
 
   protected

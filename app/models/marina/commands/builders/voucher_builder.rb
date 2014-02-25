@@ -10,7 +10,7 @@ module Marina
         end
 
         def do_create params = {}
-
+          super params
         end
 
       end
