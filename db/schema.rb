@@ -108,15 +108,30 @@ ActiveRecord::Schema.define(version: 20140219103333) do
     t.string   "email"
     t.string   "encrypted_password"
     t.string   "api_token"
-    t.boolean  "receives_mailshots",   default: false, null: false
+    t.boolean  "receives_mailshots",    default: false, null: false
+    t.boolean  "has_directory_listing", default: false, null: false
+    t.string   "visible_to"
+    t.text     "visible_plans"
     t.text     "permissions"
     t.text     "data"
+    t.text     "biography"
+    t.string   "title"
+    t.text     "address"
+    t.string   "town"
+    t.string   "county"
+    t.string   "postcode"
+    t.string   "country"
+    t.string   "telephone"
+    t.string   "web_address"
+    t.string   "source"
+    t.datetime "last_login_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "payment_processor_id"
   end
 
   add_index "marina_db_members", ["site_id", "api_token"], name: "index_marina_db_members_on_site_id_and_api_token", unique: true, using: :btree
+  add_index "marina_db_members", ["site_id", "created_at", "visible_to"], name: "index_marina_db_members_on_site_id_and_created_at_and_visible_to", using: :btree
   add_index "marina_db_members", ["site_id", "email"], name: "index_marina_db_members_on_site_id_and_email", using: :btree
   add_index "marina_db_members", ["site_id", "last_name"], name: "index_marina_db_members_on_site_id_and_last_name", using: :btree
   add_index "marina_db_members", ["site_id", "username"], name: "index_marina_db_members_on_site_id_and_username", using: :btree
@@ -124,13 +139,15 @@ ActiveRecord::Schema.define(version: 20140219103333) do
   create_table "marina_db_subscription_plans", force: true do |t|
     t.integer  "site_id"
     t.string   "type"
-    t.string   "name",                                                                       null: false
+    t.string   "name",                                                                        null: false
     t.decimal  "price",                              precision: 10, scale: 2
     t.integer  "length"
     t.string   "supporting_information_label"
     t.text     "supporting_information_description"
     t.text     "feature_levels"
-    t.boolean  "active",                                                      default: true, null: false
+    t.boolean  "has_season_ticket",                                           default: false, null: false
+    t.boolean  "has_directory_listing",                                       default: false, null: false
+    t.boolean  "active",                                                      default: true,  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "plan_url"
