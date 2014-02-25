@@ -13,18 +13,17 @@ namespace :mpg do
   end
 
   class LegacyMpgUser < ActiveRecord::Base
-    has_many :member_skills, class_name: 'LegacyMpgMemberSkill'
+    has_many :member_skills, class_name: 'LegacyMpgMemberSkill', foreign_key: 'user_id'
     has_many :skills, through: :member_skills, class_name: 'LegacyMpgSkill'
-
   end
 
   class LegacyMpgMemberSkill < ActiveRecord::Base
-    belongs_to :member, class_name: 'LegacyMpgUser'
-    belongs_to :skill, class_name: 'LegacyMpgSkill'
+    belongs_to :member, class_name: 'LegacyMpgUser', foreign_key: 'user_id'
+    belongs_to :skill, class_name: 'LegacyMpgSkill', foreign_key: 'skill_id'
   end
 
   class LegacyMpgSkill < ActiveRecord::Base
-    has_many :member_skills, class_name: 'LegacyMpgMemberSkill'
+    has_many :member_skills, class_name: 'LegacyMpgMemberSkill', foreign_key: 'skill_id'
   end
 
   def build_field_definitions
