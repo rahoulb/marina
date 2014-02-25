@@ -19,6 +19,19 @@ class Api::VouchersController < ApplicationController
     end
   end
 
+  def destroy
+    begin
+      voucher_builder.find params[:id] do |voucher|
+        voucher.destroy
+      end
+
+      render json: { status: 200 }
+
+    rescue Exception => e
+      render json: {}, status: 404
+    end
+  end
+
   protected
 
   def vouchers

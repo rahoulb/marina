@@ -30,18 +30,35 @@ describe 'VoucherAPI Integration Test' do
       it 'creates a new voucher of type Voucher::Credit' do
         login_as member
         create_voucher_of_type('Marina::Db::Voucher::Credit')
+        response_should_be_success
       end
 
 
       it 'creates a new voucher of type Voucher::FreeTime' do
         login_as member
         create_voucher_of_type('Marina::Db::Voucher::FreeTime')
+        response_should_be_success
       end
 
       it 'should update a voucher' do
         login_as member
         create_vouchers
         update_voucher Marina::Db::Voucher.last.id, { code: 'UPDATED' }
+        response_should_be_success
+      end
+
+      it 'should delete a valid voucher' do
+        login_as member
+        create_vouchers
+        delete_voucher Marina::Db::Voucher.last.id
+        response_should_be_success
+      end
+
+      it 'should delete a invalid voucher' do
+        login_as member
+        create_vouchers
+        delete_voucher 40
+        response.status.must_equal 404
       end
     end
   end
@@ -67,6 +84,10 @@ end
 
 def update_voucher(voucher_id, params)
   put "/api/vouchers/#{voucher_id}", voucher: params
+end
+
+def delete_voucher(voucher_id)
+  delete "/api/vouchers/#{voucher_id}"
 end
 
 def response_should_be_success
