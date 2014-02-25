@@ -63,7 +63,12 @@
       var baseUrl;
 
       baseUrl = "/api/members_directory/members_search.json?z=z";
-      baseUrl = baseUrl + ("&last_name=" + (this.lastName()));
+      if (this.lastName() !== '') {
+        baseUrl = baseUrl + ("&last_name=" + (this.lastName()));
+      }
+      if (this.acceptsInters()) {
+        baseUrl = baseUrl + "&accepts_interns=true";
+      }
       this.url(baseUrl);
       this.items.removeAll();
       return this.load(false);

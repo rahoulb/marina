@@ -55,7 +55,14 @@ describe "MemberSearchesMembersDirectory Integration Test" do
     verify_filtered_members
   end
 
+  it "lists the field definitions within the system" do
+    setup_text_fields
+    find_field_definitions
+    verify_field_definitions
+  end
+
   let(:data) { JSON.parse(response.body)['members'] }
+  let(:field_data) { JSON.parse(response.body)['fieldDefinitions'] }
   let(:standard_plan) { a_saved Marina::Db::Subscription::PaidPlan }
   let(:premium_plan) { a_saved Marina::Db::Subscription::PaidPlan }
   let(:member) { a_saved Marina::Db::Member }
@@ -133,6 +140,10 @@ describe "MemberSearchesMembersDirectory Integration Test" do
     get "/api/members_directory/members_search?first=true&second=false", format: 'json'
   end
 
+  def find_field_definitions
+    get "/api/field_definitions", format: 'json'
+  end
+
   def compare_data_for member, params
     data = params[:against]
     data['id'].must_equal member.id
@@ -143,6 +154,15 @@ describe "MemberSearchesMembersDirectory Integration Test" do
     data['name'].must_equal member.name
     data['subscriptionPlan'].must_equal member.subscription_plan
     data['subscriptionActive'].must_equal member.subscription_active
+  end
+
+  def compare_field_data_for field, params
+    data = params[:against]
+    data['id'].must_equal field.id
+    data['name'].must_equal field.name
+    data['label'].must_equal field.label
+    data['kind'].must_equal field.kind
+    data['options'].must_equal field.options
   end
 
   def verify_latest_members
@@ -168,5 +188,11 @@ describe "MemberSearchesMembersDirectory Integration Test" do
   def verify_filtered_members
     data.size.must_equal 1
     compare_data_for @match, against: data.first
+  end
+
+  def verify_field_definitions
+    field_data.size.must_equal 2
+    compare_field_data_for @first_field, against: field_data.first
+    compare_field_data_for @second_field, against: field_data.second
   end
 end
