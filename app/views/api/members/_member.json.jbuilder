@@ -19,7 +19,7 @@ json.cache! [member, field_definitions] do
   json.telephone member.telephone
   json.web_address member.web_address
   json.source member.source
-  json.created_at member.created_at
+  json.created_at member.created_at.to_date
   field_definitions.each do | field_definition |
     json.set! field_definition.name.to_s, member.value_for(field_definition)
   end
