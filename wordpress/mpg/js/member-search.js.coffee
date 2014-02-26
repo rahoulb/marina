@@ -69,7 +69,7 @@ class MembersDb extends Db
   doSearch: =>
     baseUrl = "/api/members_directory/members_search.json?z=z"
     baseUrl = baseUrl + "&last_name=#{@lastName()}" if @lastName() != ''
-    baseUrl = baseUrl + "&accepts_interns=true" if @acceptsInters()
+    baseUrl = baseUrl + "&accepts_interns=true" if @acceptsInterns()
 
     @url baseUrl
     @items.removeAll()

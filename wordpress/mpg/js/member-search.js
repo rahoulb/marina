@@ -133,7 +133,7 @@
       if (this.lastName() !== '') {
         baseUrl = baseUrl + ("&last_name=" + (this.lastName()));
       }
-      if (this.acceptsInters()) {
+      if (this.acceptsInterns()) {
         baseUrl = baseUrl + "&accepts_interns=true";
       }
       this.url(baseUrl);
