@@ -1,6 +1,12 @@
 class Api::MembersController < ApplicationController
   respond_to :json
 
+  def index
+    members.fetch do | found |
+      render action: 'index', locals: { members: found }
+    end
+  end
+
   def create
     member_builder.build_from member_params do | member, plan |
       render partial: 'member', locals: { member: member, field_definitions: field_definitions }, status: 201
@@ -24,6 +30,10 @@ class Api::MembersController < ApplicationController
 
   def field_definitions
     Marina::Db::FieldDefinition.all
+  end
+
+  def members
+    @members ||= Marina::Commands::Fetchers::MembersFetcher.new user: current_user, data_store: Marina::Db::Member
   end
 
   def member_params
