@@ -36,21 +36,9 @@ get_header(); ?>
                 <li><a href="#">Roles</a>
                   <ul class="membersearch-rolls">
                     <div class="membersearch-pointer"></div>
-                      <li><input name="" type="checkbox" value="" id="skill_1"/><label for="skill_1">Producer</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_2"/><label for="skill_2">Engineer</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_3"/><label for="skill_3">Songwriter</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_4"/><label for="skill_4">Programmer</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_5"/><label for="skill_5">Mastering Engineer</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_6"/><label for="skill_6">Musician</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_7"/><label for="skill_7">Mixer</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_8"/><label for="skill_8">Re-Mixer</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_9"/><label for="skill_9">Arranger</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_10"/><label for="skill_10">Education</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_11"/><label for="skill_11">Gaming</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_12"/><label for="skill_12">Multimedia</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_13"/><label for="skill_13">Audio Tech</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_14"/><label for="skill_14">Composer</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_15"/><label for="skill_15">Songwriter</label></li>
+                      <!-- ko foreach: fieldDefinitionsDb.roles -->
+                      <li><input type="checkbox" class="role" data-bind="attr: { title: $data }"/><label data-bind="text: $data"></label></li>
+                      <!-- /ko -->
                       <div class="mpg-clear"></div>
                     </ul>
                 </li>
@@ -58,36 +46,9 @@ get_header(); ?>
                 <li><a href="#">Genre</a>
                   <ul class="membersearch-genre">
                     <div class="membersearch-pointer"></div>
-                      <li><input name="" type="checkbox" value="" id="skill_101"/><label for="skill_101">Pop</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_102"/><label for="skill_102">Folk</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_103"/><label for="skill_103">Rock</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_103a"/><label for="skill_103a">Blues</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_104"/><label for="skill_104">Film</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_105"/><label for="skill_105">Multimedia</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_106"/><label for="skill_106">Ambient</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_107"/><label for="skill_107">Classical</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_108"/><label for="skill_108">World</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_109"/><label for="skill_109">Alternative</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_110"/><label for="skill_11">Jazz</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_111"/><label for="skill_111">Country</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_112"/><label for="skill_112">R and B</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_113"/><label for="skill_113">Soul</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_114"/><label for="skill_114">Electronic</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_115"/><label for="skill_115">Heavy Metal</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_116"/><label for="skill_116">Reggae</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_117"/><label for="skill_117">Death Metal</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_118"/><label for="skill_118">Punk/Thrash</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_119"/><label for="skill_119">Indie</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_120"/><label for="skill_120">Urban</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_121"/><label for="skill_121">Hip-Hop/Rap</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_122"/><label for="skill_122">Dance</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_123"/><label for="skill_123">House</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_124"/><label for="skill_124">Chill</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_125"/><label for="skill_125">Dub</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_126"/><label for="skill_126">Trance</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_127"/><label for="skill_127">Techno</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_128"/><label for="skill_128">Drum and bass</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_129"/><label for="skill_129">Garage</label></li>
+                      <!-- ko foreach: fieldDefinitionsDb.genres -->
+                      <li><input type="checkbox" class="genre" data-bind="attr: { title: $data }"/><label data-bind="text: $data"></label></li>
+                      <!-- /ko -->
                     <div class="mpg-clear"></div>
                   </ul>
                 </li> 
@@ -95,18 +56,9 @@ get_header(); ?>
                 <li><a href="#">Instruments</a>
                   <ul class="membersearch-instruments">
                     <div class="membersearch-pointer"></div>
-                      <li><input name="" type="checkbox" value="" id="skill_201"/><label for="skill_201">Guitar</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_202"/><label for="skill_202">Drums</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_203"/><label for="skill_203">Bass</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_204"/><label for="skill_204">Vocals</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_205"/><label for="skill_205">Woodwind</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_206"/><label for="skill_206">Strings</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_207"/><label for="skill_207">Keyboards</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_208"/><label for="skill_208">Percussion</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_209"/><label for="skill_209">Brass</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_210"/><label for="skill_210">Voice</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_211"/><label for="skill_211">Organ</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_212"/><label for="skill_212">Piano</label></li>         
+                      <!-- ko foreach: fieldDefinitionsDb.instruments -->
+                      <li><input type="checkbox" class="instrument" data-bind="attr: { title: $data }"/><label data-bind="text: $data"></label></li>
+                      <!-- /ko -->
                     <div class="mpg-clear"></div>
                   </ul>
                 </li>
@@ -114,19 +66,9 @@ get_header(); ?>
                 <li><a href="#">Facilities</a>
                   <ul class="membersearch-facilities">
                     <div class="membersearch-pointer"></div>
-                      <li><input name="" type="checkbox" value="" id="skill_301"/><label for="skill_301">Studio/several recording rooms</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_302"/><label for="skill_302">Studio/single recording room</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_303"/><label for="skill_303">Studio/vocal booth</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_304"/><label for="skill_304">Studio/control room only</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_305"/><label for="skill_305">Project studio</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_306"/><label for="skill_306">Pro Tools HD</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_307"/><label for="skill_307">Pro Tools M-Powered</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_308"/><label for="skill_308">Pro Tools LE</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_309"/><label for="skill_309">Logic Studio</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_310"/><label for="skill_310">Digital Performer</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_311"/><label for="skill_311">Cubase</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_312"/><label for="skill_312">other DAW</label></li>
-                      <li><input name="" type="checkbox" value="" id="skill_313"/><label for="skill_313">Nuendo</label></li>      
+                      <!-- ko foreach: fieldDefinitionsDb.facilities -->
+                      <li><input type="checkbox" class="facility" data-bind="attr: { title: $data }"/><label data-bind="text: $data"></label></li>
+                      <!-- /ko -->
                     <div class="mpg-clear"></div>
                   </ul>
                 </li>

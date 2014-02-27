@@ -13,7 +13,17 @@ namespace :mpg do
   end
 
   class LegacyMpgUser < ActiveRecord::Base
+    has_many :member_skills, class_name: 'LegacyMpgMemberSkill', foreign_key: 'user_id'
+    has_many :skills, through: :member_skills, class_name: 'LegacyMpgSkill'
+  end
 
+  class LegacyMpgMemberSkill < ActiveRecord::Base
+    belongs_to :member, class_name: 'LegacyMpgUser', foreign_key: 'user_id'
+    belongs_to :skill, class_name: 'LegacyMpgSkill', foreign_key: 'skill_id'
+  end
+
+  class LegacyMpgSkill < ActiveRecord::Base
+    has_many :member_skills, class_name: 'LegacyMpgMemberSkill', foreign_key: 'skill_id'
   end
 
   def build_field_definitions
@@ -33,6 +43,10 @@ namespace :mpg do
     Marina::Db::FieldDefinition.create! name: 'source', label: 'Source', kind: 'short_text' unless Marina::Db::FieldDefinition.names.include? :source
     Marina::Db::FieldDefinition.create! name: 'reason_for_interest', label: 'Reason for interest', kind: 'long_text' unless Marina::Db::FieldDefinition.names.include? :reason_for_interest
     Marina::Db::FieldDefinition.create! name: 'job_title', label: 'Job title', kind: 'short_text' unless Marina::Db::FieldDefinition.names.include? :job_title
+    Marina::Db::FieldDefinition.create! name: 'roles', label: 'Roles', kind: 'multi_select', options: ["Producer", "Engineer", "Songwriter", "Programmer", "Mastering Engineer", "Musician", "Mixer", "Re-Mixer", "Arranger", "Education", "Gaming", "Multimedia", "Audio Tech", "Composer", "Songwriter"] unless Marina::Db::FieldDefinition.names.include? :roles
+    Marina::Db::FieldDefinition.create! name: 'facilities', label: 'Facilities', kind: 'multi_select', options: ["Studio/several recording rooms", "Studio/single recording room", "Studio/vocal booth", "Studio/control room only", "Project studio", "Pro Tools HD", "Pro Tools M-Powered", "Pro Tools LE", "Logic Studio", "Digital Performer", "Cubase", "other DAW", "Nuendo"] unless Marina::Db::FieldDefinition.names.include? :facilities
+    Marina::Db::FieldDefinition.create! name: 'genres', label: 'Genres', kind: 'multi_select', options: ["Pop", "Folk", "Rock", "Blues", "Film", "Multimedia", "Ambient", "Classical", "World", "Alternative", "Jazz", "Country", "R&B", "Soul", "Electronic", "Heavy Metal", "Reggae", "Death Metal", "Punk/Thrash", "Indie", "Urban", "Hip-Hop/Rap", "Dance", "House", "Chill", "Dub", "Trance", "Techno", "Drum&bass", "Garage"] unless Marina::Db::FieldDefinition.names.include? :genres
+    Marina::Db::FieldDefinition.create! name: 'instruments', label: 'Instruments', kind: 'multi_select', options: ["Guitar", "Drums", "Bass", "Vocals", "Woodwind", "Strings", "Keyboards", "Percussion", "Brass", "Voice", "Organ", "Piano"] unless Marina::Db::FieldDefinition.names.include? :instruments
   end
 
   def build_subscription_plans
@@ -61,15 +75,19 @@ namespace :mpg do
     puts "Database password: "
     password = STDIN.gets.strip
 
-    LegacyMpgUser.establish_connection({ 
-      adapter: 'mysql2',
-      database: 'mpg_legacy',
-      host: 'db001.3hv.co.uk',
-      username: 'mpg',
-      password: password
-    })
+    [LegacyMpgUser, LegacyMpgMemberSkill, LegacyMpgSkill].each do | c |
+      c.establish_connection({ 
+        adapter: 'mysql2',
+        database: 'mpg_legacy',
+        host: 'db001.3hv.co.uk',
+        username: 'mpg',
+        password: password
+      })
+    end
 
     LegacyMpgUser.table_name = 'users'
+    LegacyMpgMemberSkill.table_name = 'member_skills'
+    LegacyMpgSkill.table_name = 'skills'
   end
 
   def copy_data
@@ -114,7 +132,11 @@ namespace :mpg do
           'accepts_interns' => legacy_user.accepts_interns, 
           'source' => legacy_user.source,
           'reason_for_interest' => legacy_user.reason_for_interest, 
-          'job_title' => legacy_user.job_title
+          'job_title' => legacy_user.job_title,
+          'roles' => roles_for(legacy_user),
+          'genres' => genres_for(legacy_user),
+          'facilities' => facilities_for(legacy_user),
+          'instruments' => instruments_for(legacy_user)
         }
       })
       add_subscription(new_user, legacy_user) if legacy_user.is_active
@@ -130,7 +152,7 @@ namespace :mpg do
   end
 
   def all_plan_ids
-    @all_plan_ids = Marina::Db::Subscription::Plan.all.collect &:id
+    @all_plan_ids ||= Marina::Db::Subscription::Plan.all.collect(&:id)
   end
 
   def visible_plans_for legacy_user
@@ -141,10 +163,31 @@ namespace :mpg do
     end
   end
 
+  def genres_for legacy_user
+    skills_matching 'genre', legacy_user.skills
+  end
+
+  def roles_for legacy_user
+    skills_matching 'role', legacy_user.skills
+  end
+
+  def instruments_for legacy_user
+    skills_matching 'instrument', legacy_user.skills
+  end
+
+  def facilities_for legacy_user
+    skills_matching 'facility', legacy_user.skills
+  end
+
+  def skills_matching skill_type, skills
+    skills.select { | s | s.skill_type == skill_type }.collect(&:name)
+  end
+
   def add_subscription new_user, legacy_user
     puts "... #{legacy_user.feature_level}"
     plan = Marina::Db::Subscription::Plan.by_feature_level legacy_user.feature_level
     subscription = new_user.subscriptions.where(plan_id: plan.id).first_or_initialize
     subscription.update_attributes! plan: plan, active: legacy_user.is_active, expires_on: legacy_user.subscribed_until, lifetime_subscription: legacy_user.lifetime_member, credit: legacy_user.credit
   end
+
 end

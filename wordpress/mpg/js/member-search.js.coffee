@@ -5,10 +5,42 @@ class MemberSearchViewModel extends ViewModel
     super
     @membersDb = new MembersDb this
     @latestMembersDb = new LatestMembersDb this
-    @latestMembersDb.load true
+    @latestMembersDb.load false
+    @fieldDefinitionsDb = new FieldDefinitionsDb this
+    @fieldDefinitionsDb.load false, =>
+      @fieldDefinitionsDb.setupSearchOptions()
 
   deselectLetters: ->
     jQuery('.membersearch-alpha a').removeClass 'alpha-active'
+
+class FieldDefinitionsDb extends Db
+  constructor: (viewModel)->
+    super viewModel, 'fieldDefinition', "/api/field_definitions.json"
+    @roles = ko.observableArray []
+    @genres = ko.observableArray []
+    @facilities = ko.observableArray []
+    @instruments = ko.observableArray []
+
+  newItem: (id)->
+    new FieldDefinition id, this
+
+  itemDataFrom: (data)->
+    data.fieldDefinitions
+
+  setupSearchOptions: ->
+    field = @fieldCalled 'roles'
+    @roles field.options() if field?
+    field = @fieldCalled 'genres'
+    @genres field.options() if field?
+    field = @fieldCalled 'instruments'
+    @instruments field.options() if field?
+    field = @fieldCalled 'facilities'
+    @facilities field.options() if field?
+
+  fieldCalled: (name)->
+    for field in @items()
+      return field if field.name() == name
+    return null
 
 class LatestMembersDb extends Db
   constructor: (viewModel)->
@@ -29,10 +61,15 @@ class MembersDb extends Db
       @viewModel.deselectLetters()
 
     @acceptsInterns = ko.observable false
+    @roles = ko.observableArray []
+    @genres = ko.observableArray []
+    @instruments = ko.observableArray []
+    @facilities = ko.observableArray []
 
   doSearch: =>
     baseUrl = "/api/members_directory/members_search.json?z=z"
-    baseUrl = baseUrl + "&last_name=#{@lastName()}"
+    baseUrl = baseUrl + "&last_name=#{@lastName()}" if @lastName() != ''
+    baseUrl = baseUrl + "&accepts_interns=true" if @acceptsInterns()
 
     @url baseUrl
     @items.removeAll()
@@ -77,6 +114,20 @@ class Member extends Model
     @managementName data.managementName
     @managementCompany data.managementCompany
     @managementEmail data.managementEmail
+
+class FieldDefinition extends Model
+  constructor: (id, db)->
+    super id, db
+    @name = ko.observable ''
+    @label = ko.observable ''
+    @kind = ko.observable ''
+    @options = ko.observableArray []
+
+  updateAttributes: (data)->
+    @name data.name
+    @label data.label
+    @kind data.kind
+    @options data.options
 
 window.viewModel = new MemberSearchViewModel
 
