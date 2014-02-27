@@ -15,21 +15,13 @@ class Api::VouchersController < ApplicationController
 
    def update
     voucher_builder.update params[:id], voucher_params do | updated |
-      render partial: '/api/vouchers/voucher', locals: { voucher: updated }
+      render partial: '/api/vouchers/voucher.json.jbuilder', locals: { voucher: updated }
     end
   end
 
   def destroy
-    begin
-      voucher_builder.find params[:id] do |voucher|
-        voucher.destroy
-      end
-
-      render json: { status: 200 }
-
-    rescue Exception => e
-      render json: {}, status: 404
-    end
+    voucher_builder.destroy params[:id]
+    render json: {}, status: 200
   end
 
   protected
