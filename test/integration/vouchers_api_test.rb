@@ -57,8 +57,7 @@ describe 'VoucherAPI Integration Test' do
       it 'should delete a invalid voucher' do
         login_as member
         create_vouchers
-        delete_voucher 40
-        response.status.must_equal 404
+        assert_raises(ActionView::MissingTemplate) { delete_voucher 40 }
       end
     end
   end
