@@ -34,4 +34,6 @@ group :development, :test do
   gem 'action_mailer_cache_delivery'
   gem 'selenium-webdriver'
   gem 'timecop'
+  gem 'm', '~> 1.3.1'
+  gem 'pry'
 end

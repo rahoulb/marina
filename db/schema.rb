@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140219103333) do
+ActiveRecord::Schema.define(version: 20140225160214) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -188,12 +188,13 @@ ActiveRecord::Schema.define(version: 20140219103333) do
 
   create_table "marina_db_vouchers", force: true do |t|
     t.integer  "site_id"
-    t.string   "code",                               default: "", null: false
+    t.string   "code",                               default: "",   null: false
     t.string   "type"
     t.integer  "days"
     t.decimal  "amount",     precision: 8, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active",                             default: true
   end
 
   add_index "marina_db_vouchers", ["site_id", "code"], name: "index_marina_db_vouchers_on_site_id_and_code", using: :btree

@@ -39,6 +39,18 @@ module Marina
         item.update_attributes! params
       end
 
+      def destroy id
+        check_security!
+        find id do | item |
+          do_destroy item
+          yield item if block_given?
+        end
+      end
+
+      def do_destroy item
+        item.destroy
+      end
+
       protected
 
       def is_id object
