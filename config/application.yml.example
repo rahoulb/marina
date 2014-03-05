@@ -6,6 +6,14 @@ development:
   pin_payment_site: 'SITE'
   pin_payment_url: 'URL'
   authenticator_class: 'Marina::Commands::StandardAuthenticator'
+  mailing_list_processor_class: 'Marina::MailingListProcessor'
+  payment_processor_class: 'Marina::PaymentProcessor'
+  smtp_address: 'smtp.example.com'
+  smtp_port: 25
+  smtp_user_name: 'smtp.user.name'
+  smtp_password: 'password'
+  smtp_domain: 'example.com'
+  smtp_authentication: 'plain'
 
 test: 
   secret_key_base: 'some secret'
@@ -15,3 +23,11 @@ test:
   pin_payment_site: 'SITE'
   pin_payment_url: 'URL'
   authenticator_class: 'Marina::Commands::StandardAuthenticator'
+  mailing_list_processor_class: 'Marina::MailingListProcessor'
+  payment_processor_class: 'Marina::PaymentProcessor'
+  smtp_address: 'smtp.example.com'
+  smtp_port: 25
+  smtp_user_name: 'smtp.user.name'
+  smtp_password: 'password'
+  smtp_domain: 'example.com'
+  smtp_authentication: 'plain'
