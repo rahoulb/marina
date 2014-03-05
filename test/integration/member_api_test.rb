@@ -35,25 +35,34 @@ describe "Member Api Integration Test" do
         end
 
         it 'should able to search existing members' do
-          list_members('alpha')
+          list_members 'alpha'
           response_should_be_success
           response_body_should_contains_listed_member
         end
 
         it 'should able to search existing member for partial matches' do
-          list_members('pha')
+          list_members 'pha'
           response_should_be_success
           response_body_should_contains_listed_member
         end
 
         it 'should return blank if result not found' do
-          list_members('jimmy')
+          list_members 'jimmy'
           response_should_be_success
           response_body_should_be_empty
         end
       end
 
+      describe 'when updating members' do
+
+        it 'should update the given member' do
+          update_member Marina::Db::Member.last.id, { username: 'updated username', api_token: 'myapitoken' }
+          response_should_be_success
+        end
+      end
+
     end
+
 
     let(:member) { a_saved Marina::Db::Member, permissions: ['manage_members'] }
 
@@ -68,6 +77,10 @@ end
 
 def list_members(query=nil)
   get "/api/members", q: query, format: 'json'
+end
+
+def update_member(member_id, params)
+  put "/api/members/#{member_id}", member: params, format: 'json'
 end
 
 def response_body_should_contains_listed_member
