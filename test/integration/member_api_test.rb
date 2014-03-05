@@ -26,28 +26,31 @@ describe "Member Api Integration Test" do
         populate_few_dummy_users
       end
 
-      it 'should able to list all existing members' do
-        list_members
-        response_should_be_success
-        response_body_should_contains_listed_member
-      end
+      describe 'when listing/searching members' do
 
-      it 'should able to search existing members' do
-        list_members('alpha')
-        response_should_be_success
-        response_body_should_contains_listed_member
-      end
+        it 'should able to list all existing members' do
+          list_members
+          response_should_be_success
+          response_body_should_contains_listed_member
+        end
 
-      it 'should able to search existing member for partial matches' do
-        list_members('pha')
-        response_should_be_success
-        response_body_should_contains_listed_member
-      end
+        it 'should able to search existing members' do
+          list_members('alpha')
+          response_should_be_success
+          response_body_should_contains_listed_member
+        end
 
-      it 'should return blank if result not found' do
-        list_members('jimmy')
-        response_should_be_success
-        response_body_should_be_empty
+        it 'should able to search existing member for partial matches' do
+          list_members('pha')
+          response_should_be_success
+          response_body_should_contains_listed_member
+        end
+
+        it 'should return blank if result not found' do
+          list_members('jimmy')
+          response_should_be_success
+          response_body_should_be_empty
+        end
       end
 
     end
