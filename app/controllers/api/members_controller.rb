@@ -2,8 +2,8 @@ class Api::MembersController < ApplicationController
   respond_to :json
 
   def index
-    members.fetch do | found |
-      render action: 'index', locals: { members: found }
+    members.fetch({query: params['q']}) do | found |
+      render action: 'index', locals: { members: found, field_definitions: field_definitions }
     end
   end
 

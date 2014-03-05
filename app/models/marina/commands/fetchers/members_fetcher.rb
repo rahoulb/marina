@@ -12,9 +12,9 @@ module Marina
         end
 
         def do_fetch params = {}
-          data_store.all
+          search = "%#{params[:query]}%"
+          data_store.where("username like ? or email like ?", search, search)
         end
-
       end
     end
   end
